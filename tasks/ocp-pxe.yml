@@ -143,6 +143,9 @@
       shell: |
         firewall-cmd --reload
 
+    - name: Remove pxe files
+      ignore_errors: yes
+      shell:  "rm -rf /var/lib/tftpboot/pxelinux.cfg/*"
 
     - name: Remove packages
       yum:
