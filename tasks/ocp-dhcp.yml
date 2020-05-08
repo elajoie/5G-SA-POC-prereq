@@ -1,0 +1,111 @@
+---
+
+- name: Install DHCP
+  become: true
+  tags: install
+  block:
+
+    - name: Install packages for DHCP
+      yum:
+        name:
+          - dhcp-server
+          - syslinux
+          - firewalld
+        state: present
+
+
+    - name: Get IP
+      shell: "nmcli con show '{{ srv_interface }}' | grep 'ipv4.addresses' | awk '{print $2}' | awk -F / '{print $1}'"
+      register: dhcpipaddr
+
+    - name: Setting IP as a fact
+      set_fact:
+        dhcpipaddr: "{{ dhcpipaddr.stdout }}"
+
+
+    - name: Get IFACE
+      shell: "IFACE=$(nmcli con show '{{ srv_interface }}' | grep connection.interface-name | awk '{print $2}'); echo $IFACE"
+      register: dhcpnetworkifacename
+
+    - name: Setting IFACE as a fact
+      set_fact:
+        dhcpnetworkifacename: "{{ dhcpnetworkifacename.stdout }}"
+
+
+    - name: Write out dhcp file
+      template:
+        src: dhcpd.conf.j2
+        dest: /etc/dhcp/dhcpd.conf
+
+
+
+    - name: Starting DHCP/PXE services
+      service:
+        name: "{{ item }}"
+        enabled: yes
+        state: restarted
+      with_items:
+        - dhcpd
+
+    - name: Enable firewalld
+      systemd:
+        name: firewalld
+        state: started
+        enabled: True
+
+
+    - name: Get Firewalld ZONE
+      shell: "IFACE=$(nmcli con show '{{ srv_interface }}' | grep connection.interface-name | awk '{print $2}') ; ZONE=$(firewall-cmd --list-all-zones | grep -B 3 $IFACE | head -n 1 | awk '{print $1}') ; echo $ZONE"
+      register: firewalldzone
+
+    - name: Configure Firewalld
+      ignore_errors: yes
+      firewalld:
+        zone: "{{ firewalldzone.stdout }}"
+        state: enabled
+        permanent: yes
+        port: "{{ item }}"
+      with_items:
+        - "{{ ssh_port }}/tcp"
+        - 67/udp
+        - 68/udp
+
+    - name: Reload Firewalld
+      ignore_errors: yes
+      shell: |
+        firewall-cmd --reload
+
+
+- name: Remove DHCP
+  become: true
+  tags: remove
+  block:
+
+    - name: Get Firewalld ZONE
+      shell: "IFACE=$(nmcli con show '{{ srv_interface }}' | grep connection.interface-name | awk '{print $2}') ; ZONE=$(firewall-cmd --list-all-zones | grep -B 3 $IFACE | head -n 1 | awk '{print $1}') ; echo $ZONE"
+      register: firewalldzone
+
+    - name: Configure Firewalld
+      ignore_errors: yes
+      firewalld:
+        zone: "{{ firewalldzone.stdout }}"
+        state: disabled
+        permanent: yes
+        port: "{{ item }}"
+      with_items:
+        - 67/udp
+        - 68/udp
+
+    - name: Reload Firewalld
+      ignore_errors: yes
+      shell: |
+        firewall-cmd --reload
+
+
+
+    - name: Remove packages
+      yum:
+        name:
+          - dhcp
+          - syslinux
+        state: removed

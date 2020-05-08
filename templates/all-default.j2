@@ -1,0 +1,28 @@
+FFFFFFFFFFFFF {{ nodes.bootstrap.macaddr }}
+DEFAULT pxeboot
+TIMEOUT 20
+PROMPT 0
+LABEL pxeboot
+    KERNEL http://{{pxe.http_ip}}:{{pxe.http_port}}/images/rhcos-installer-kernel
+    APPEND ip=dhcp  rd.neednet=1 initrd=http://{{pxe.http_ip}}:{{pxe.http_port}}/images/rhcos-installer-initramfs.img console=tty0 console=ttyS0 coreos.inst=yes coreos.inst.install_dev={{ nodes.bootstrap.disk }} coreos.inst.image_url=http://{{pxe.http_ip}}:{{pxe.http_port}}/images/rhcos-metal.raw.gz coreos.inst.ignition_url=http://{{pxe.http_ip}}:{{pxe.http_port}}/ignition/{{ nodes.bootstrap.name }}.ign
+FFFFFFFFFFFFF
+{% for n in nodes.masters %}
+FFFFFFFFFFFFF {{ n.macaddr }}
+DEFAULT pxeboot
+TIMEOUT 20
+PROMPT 0
+LABEL pxeboot
+    KERNEL http://{{pxe.http_ip}}:{{pxe.http_port}}/images/rhcos-installer-kernel
+    APPEND ip=dhcp rd.neednet=1 initrd=http://{{pxe.http_ip}}:{{pxe.http_port}}/images/rhcos-installer-initramfs.img console=tty0 console=ttyS0 coreos.inst=yes coreos.inst.install_dev={{ n.disk }} coreos.inst.image_url=http://{{pxe.http_ip}}:{{pxe.http_port}}/images/rhcos-metal.raw.gz coreos.inst.ignition_url=http://{{pxe.http_ip}}:{{pxe.http_port}}/ignition/{{ n.name }}.ign
+FFFFFFFFFFFFF
+{% endfor %}
+{% for n in nodes.workers %}
+FFFFFFFFFFFFF {{ n.macaddr }}
+DEFAULT pxeboot
+TIMEOUT 20
+PROMPT 0
+LABEL pxeboot
+    KERNEL http://{{pxe.http_ip}}:{{pxe.http_port}}/images/rhcos-installer-kernel
+    APPEND ip=dhcp rd.neednet=1 initrd=http://{{pxe.http_ip}}:{{pxe.http_port}}/images/rhcos-installer-initramfs.img console=tty0 console=ttyS0 coreos.inst=yes coreos.inst.install_dev={{ n.disk }} coreos.inst.image_url=http://{{pxe.http_ip}}:{{pxe.http_port}}/images/rhcos-metal.raw.gz coreos.inst.ignition_url=http://{{pxe.http_ip}}:{{pxe.http_port}}/ignition/{{ n.name }}.ign
+FFFFFFFFFFFFF
+{% endfor %}

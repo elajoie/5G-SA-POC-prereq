@@ -1,0 +1,147 @@
+---
+# defaults file for ocp-prereq-role
+
+srv_interface: "eth0"
+ssh_port: "22"
+
+ocp:
+    api_ip: "{{ lbip }}"
+    api_int_ip: "{{ lbip }}"
+    apps_ip: "{{ lbip }}"
+
+
+
+nodes:
+  bootstrap:
+    name: "bootstrap"
+    ipaddr: "{{ nodes_subnet24 | default ('192.168.126')}}.10"
+    netmask: "255.255.255.0"
+    gw: "{{ nodes_subnet24 | default ('192.168.126')}}.1"
+    mgmtif: "ens3"
+    macaddr: "52:54:60:11:11:11"
+    disk: "vda"
+  masters:
+    - name: "master0"
+      ipaddr: "{{ nodes_subnet24 | default ('192.168.126')}}.11"
+      netmask: "255.255.255.0"
+      gw: "{{ nodes_subnet24 | default ('192.168.126')}}.1"
+      mgmtif: "ens3"
+      macaddr: "52:54:60:00:00:0a"
+      disk: "vda"
+    - name: "master1"
+      ipaddr: "{{ nodes_subnet24 | default ('192.168.126')}}.12"
+      netmask: "255.255.255.0"
+      gw: "{{ nodes_subnet24 | default ('192.168.126')}}.1"
+      mgmtif: "ens3"
+      macaddr: "52:54:60:00:00:0b"
+      disk: "vda"
+    - name: "master2"
+      ipaddr: "{{ nodes_subnet24 | default ('192.168.126')}}.13"
+      netmask: "255.255.255.0"
+      gw: "{{ nodes_subnet24 | default ('192.168.126')}}.1"
+      mgmtif: "ens3"
+      macaddr: "52:54:60:00:00:0c"
+      disk: "vda"
+  workers:
+    - name: "worker0"
+      ipaddr: "{{ nodes_subnet24 | default ('192.168.126')}}.15"
+      netmask: "255.255.255.0"
+      gw: "{{ nodes_subnet24 | default ('192.168.126')}}.1"
+      mgmtif: "ens3"
+      macaddr: "52:54:60:00:01:0a"
+      disk: "vda"
+    - name: "worker1"
+      ipaddr: "{{ nodes_subnet24 | default ('192.168.126')}}.16"
+      netmask: "255.255.255.0"
+      gw: "{{ nodes_subnet24 | default ('192.168.126')}}.1"
+      mgmtif: "ens3"
+      macaddr: "52:54:60:00:01:0b"
+      disk: "vda"
+    - name: "worker2"
+      ipaddr: "{{ nodes_subnet24 | default ('192.168.126')}}.17"
+      netmask: "255.255.255.0"
+      gw: "{{ nodes_subnet24 | default ('192.168.126')}}.1"
+      mgmtif: "ens3"
+      macaddr: "52:54:60:00:01:0c"
+      disk: "vda"
+    - name: "worker3"
+      ipaddr: "{{ nodes_subnet24 | default ('192.168.126')}}.18"
+      netmask: "255.255.255.0"
+      gw: "{{ nodes_subnet24 | default ('192.168.126')}}.1"
+      mgmtif: "ens3"
+      macaddr: "52:54:60:00:01:0d"
+      disk: "vda"
+    - name: "worker4"
+      ipaddr: "{{ nodes_subnet24 | default ('192.168.126')}}.19"
+      netmask: "255.255.255.0"
+      gw: "{{ nodes_subnet24 | default ('192.168.126')}}.1"
+      mgmtif: "ens3"
+      macaddr: "52:54:60:00:01:0e"
+      disk: "vda"
+    - name: "worker5"
+      ipaddr: "{{ nodes_subnet24 | default ('192.168.126')}}.20"
+      netmask: "255.255.255.0"
+      gw: "{{ nodes_subnet24 | default ('192.168.126')}}.1"
+      mgmtif: "ens3"
+      macaddr: "52:54:60:00:01:0f"
+      disk: "vda"
+
+
+
+## Load Balancer
+ocp_prereq_lb: "true"
+
+## HTTP
+ocp_prereq_http: "true"
+http:
+  port: "8080"
+
+
+## NFS
+ocp_prereq_nfs: "true"
+
+
+## DNS
+ocp_prereq_dns: "true"
+dns:
+  domain: "{{ baseDomain | default('127.0.0.1.nip.io') }}"
+  subdomain: "{{ metadata.name | default('ocp') }}"
+  forwarder1: "8.8.8.8"
+  forwarder2: "8.8.4.4"
+
+
+## DHCP
+ocp_prereq_dhcp: "true"
+dhcp:
+  router: "{{ nodes_subnet24 | default ('192.168.126')}}.1"
+  bcast: "{{ nodes_subnet24 | default ('192.168.126')}}.255"
+  netmask: "255.255.255.0"
+  poolstart: "{{ nodes_subnet24 | default ('192.168.126')}}.10"
+  poolend: "{{ nodes_subnet24 | default ('192.168.126')}}.30"
+  ipid: "{{ nodes_subnet24 | default ('192.168.126')}}.0"
+  netmaskid: "255.255.255.0"
+  dns: "{{ dnsipaddr }}"
+  domainname: "{{ dns.subdomain }}.{{ dns.domain }}"
+
+
+
+## PXE
+ocp_prereq_pxe: "true"
+pxe:
+  http_ip: "{{ httpipaddr }}"
+  http_port: "{{ http.port }}"
+
+
+
+## OCP artifacts
+ocp_prereq_artifacts: "true"
+ocp_install_path: "{{ ansible_env.HOME }}/ocp"
+ocp_mirror: "https://mirror.openshift.com/pub/openshift-v4"
+ocp_install_config_path: ""
+
+ocp_inject_user_ignition: "false"
+ocp_local_username: "redhattrouble"
+ocp_local_userpass: "redhatfix"
+
+ocp_release: "4.4.3"
+ocp_create_ignition: "true"

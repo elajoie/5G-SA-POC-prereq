@@ -1,0 +1,152 @@
+---
+
+- name: Install PXE
+  become: true
+  tags: install
+  block:
+
+    - name: Install packages for PXE
+      yum:
+        name:
+          - syslinux
+          - tftp-server
+          - firewalld
+        state: present
+
+
+    - name: Create TFTP config
+      file:
+        path: /var/lib/tftpboot/pxelinux.cfg
+        state: directory
+        mode: 0755
+
+
+    - name: Create TFTP RHCOS dir
+      file:
+        path: /var/lib/tftpboot/rhcos
+        state: directory
+        mode: 0755
+
+
+
+    - name: Copy over files needed for TFTP
+      shell: "cp -a /usr/share/syslinux/* /var/lib/tftpboot"
+
+
+    - name: Set the tftp file pre-procesed
+      template:
+        src: all-default.j2
+        dest: /var/lib/tftpboot/pxelinux.cfg/all-default
+        mode: 0555
+
+
+    - name: Installing PXE file extractor
+      copy:
+        src: extract-pxe-files.sh
+        dest: /usr/local/bin/extract-pxe-files
+        mode: '0555'
+
+
+    - name: Extract PXE files
+      shell: "/usr/local/bin/extract-pxe-files /var/lib/tftpboot/pxelinux.cfg/all-default /var/lib/tftpboot/pxelinux.cfg"
+
+
+
+    - name: Installing TFTP Systemd helper
+      copy:
+        src: start-tftp.sh
+        dest: /usr/local/bin/start-tftp.sh
+        mode: '0555'
+
+    - name: Installing TFTP Systemd unit file
+      copy:
+        src: helper-tftp.service
+        dest: /etc/systemd/system/helper-tftp.service
+        mode: '0655'
+
+    - name: Systemd daemon reload
+      systemd:
+        daemon_reload: yes
+
+
+
+    - name: Starting PXE services
+      service:
+        name: "{{ item }}"
+        enabled: yes
+        state: restarted
+      with_items:
+        - tftp
+        - helper-tftp
+
+    - name: Unmasking Services
+      systemd:
+        name: "{{ item }}"
+        enabled: yes
+        masked: no
+      with_items:
+        - tftp
+
+    - name: Enable firewalld
+      systemd:
+        name: firewalld
+        state: started
+        enabled: True
+
+
+    - name: Get Firewalld ZONE
+      shell: "IFACE=$(nmcli con show '{{ srv_interface }}' | grep connection.interface-name | awk '{print $2}'); ZONE=$(firewall-cmd --list-all-zones | grep -B 3 $IFACE | head -n 1 | awk '{print $1}') ; echo $ZONE"
+      register: firewalldzone
+
+    - name: Configure Firewalld
+      ignore_errors: yes
+      firewalld:
+        zone: "{{ firewalldzone.stdout }}"
+        state: enabled
+        permanent: yes
+        port: "{{ item }}"
+      with_items:
+        - "{{ ssh_port }}/tcp"
+        - 67/udp
+        - 4011/udp
+        - 69/udp
+
+    - name: Reload Firewalld
+      ignore_errors: yes
+      shell: |
+        firewall-cmd --reload
+
+- name: Remove PXE
+  become: true
+  tags: remove
+  block:
+
+    - name: Get Firewalld ZONE
+      shell: "IFACE=$(nmcli con show '{{ srv_interface }}' | grep connection.interface-name | awk '{print $2}') ; ZONE=$(firewall-cmd --list-all-zones | grep -B 3 $IFACE | head -n 1 | awk '{print $1}') ; echo $ZONE"
+      register: firewalldzone
+
+
+    - name: Configure Firewalld
+      ignore_errors: yes
+      firewalld:
+        zone: "{{ firewalldzone.stdout }}"
+        state: disabled
+        permanent: yes
+        port: "{{ item }}"
+      with_items:
+        - 67/udp
+        - 4011/udp
+        - 69/udp
+
+    - name: Reload Firewalld
+      ignore_errors: yes
+      shell: |
+        firewall-cmd --reload
+
+
+    - name: Remove packages
+      yum:
+        name:
+          - syslinux
+          - tftp-server
+        state: removed
