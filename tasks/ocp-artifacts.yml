@@ -35,7 +35,7 @@
         src: "{{ ocp_mirror }}/clients/ocp/{{ ocp_release }}/openshift-install-linux-{{ ocp_release }}.tar.gz"
         dest: "{{ ocp_install_path }}/artifacts/openshift-installer/"
         remote_src: yes
-        creates: "{{ ocp_install_path }}/artifacts/openshift-installer/openshift-install"
+        creates: "{{ ocp_install_path }}/artifacts/openshift-installer/openshift-install-{{ ocp_release }}"
 
 
     - name: Download Openshift client
@@ -43,7 +43,7 @@
         src: "{{ ocp_mirror }}/clients/ocp/{{ ocp_release }}/openshift-client-linux-{{ ocp_release }}.tar.gz"
         dest: "{{ ocp_install_path }}/artifacts/openshift-client/"
         remote_src: yes
-        creates: "{{ ocp_install_path }}/artifacts/openshift-client/oc"
+        creates: "{{ ocp_install_path }}/artifacts/openshift-client/oc-{{ ocp_release }}"
 
     - name: Create a symbolic link
       ignore_errors: yes
@@ -54,8 +54,8 @@
         state: link
         force: yes
       with_dict:
-        "/usr/local/bin/oc": "{{ ocp_install_path }}/artifacts/openshift-client/oc"
-        "/usr/local/bin/openshift-install": "{{ ocp_install_path }}/artifacts/openshift-installer/openshift-install"
+        "/usr/local/bin/oc": "{{ ocp_install_path }}/artifacts/openshift-client/oc-{{ ocp_release }}"
+        "/usr/local/bin/openshift-install": "{{ ocp_install_path }}/artifacts/openshift-installer/openshift-install-{{ ocp_release }}"
 
 
     - name: SELinux restorecon
