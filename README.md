@@ -17,7 +17,7 @@ CentOS/RHEL 8, probably working with latests Fedora fedora releases. In case of 
 
 The role has been tested with OpenShift 4.4 (I'm not sure about backwards compatibility).
 
-The role can install a DNS server. Users that want to access the cluster and the applications running could either configure this DNS in their systems, configure their DNS to delegate the subdomain (clustername.basedomain) to the deployed DNS, or just have the api.clustername.basedomain and the *.apps.clustername.basedomain entries included in their DNS (probably the easiest option). In case that you don't have access to a DNS server wher you can configure those entries, you could use a nip.io domain (<kvm public ip>.nip.io) since it has a wildcard configured by default and both api and apps must point to the same entry point, the public KVM interface where the load balancer will be listening. 
+The role can install a DNS server. Users that want to access the cluster and the applications running could either configure this DNS in their systems, configure their DNS to delegate the subdomain (clustername.basedomain) to the deployed DNS, or just have the api.clustername.basedomain and the *.apps.clustername.basedomain entries included in their DNS (probably the easiest option). In case that you don't have access to a DNS server wher you can configure those entries, you could use a nip.io domain (<kvm public ip>.nip.io) since it has a wildcard configured by default and both api and apps must point to the same entry point, the public KVM interface where the load balancer will be listening.
 
 You don't need an OpenShift install-config.yaml file to run this role but it could take some values from it in case you provide one (variable ocp_install_config_path), such DNS values. If you provide a install-config.yaml file you can also take the opportunity to create the ignition files (variable ocp_inject_user_ignition).
 
@@ -69,15 +69,15 @@ The role has default variables that would work in your environment, but you stil
 
       description: Interface where the services will be published. This must be the name of the interfaces as it appears when running `nmcli con show` (for example, sometimes you will find something like `System eno1` instead just `eno1`)
 
-      default value: 
+      default value:
 
         srv_interface: eth0
 
 * dns
 
-      description: Values for DNS server configuration. You will need to setup at least dns.domain and dns.subdomain. Those values can be get from install-config.yaml file if you provide one. 
+      description: Values for DNS server configuration. You will need to setup at least dns.domain and dns.subdomain. Those values can be get from install-config.yaml file if you provide one.
 
-      default value: 
+      default value:
 
         dns:
           domain: "127.0.0.1.nip.io"
@@ -90,7 +90,7 @@ The role has default variables that would work in your environment, but you stil
 
       description: This variable contains information used by multiple services (DNS, DHCP, PXE) deployed by this role. You probably will need to setup the right MAC address and, if you want to customize it, the network details (if you are not using VirtIo dirvers the disk will be named diferent, same for the interface names).
 
-      default value: 
+      default value:
 
           nodes:
             bootstrap:
@@ -98,7 +98,6 @@ The role has default variables that would work in your environment, but you stil
               ipaddr: "192.168.126.10"
               netmask: "255.255.255.0"
               gw: "192.168.126.1"
-              mgmtif: "ens3"
               macaddr: "52:54:60:11:11:11"
               disk: "vda"
             masters:
@@ -106,21 +105,18 @@ The role has default variables that would work in your environment, but you stil
                 ipaddr: "192.168.126.11"
                 netmask: "255.255.255.0"
                 gw: "192.168.126.1"
-                mgmtif: "ens3"
                 macaddr: "52:54:60:00:00:0a"
                 disk: "vda"
               - name: "master1"
                 ipaddr: "192.168.126.12"
                 netmask: "255.255.255.0"
                 gw: "192.168.126.1"
-                mgmtif: "ens3"
                 macaddr: "52:54:60:00:00:0b"
                 disk: "vda"
               - name: "master2"
                 ipaddr: "192.168.126.13"
                 netmask: "255.255.255.0"
                 gw: "192.168.126.1"
-                mgmtif: "ens3"
                 macaddr: "52:54:60:00:00:0c"
                 disk: "vda"
             workers:
@@ -128,42 +124,36 @@ The role has default variables that would work in your environment, but you stil
                 ipaddr: "192.168.126.15"
                 netmask: "255.255.255.0"
                 gw: "192.168.126.1"
-                mgmtif: "ens3"
                 macaddr: "52:54:60:00:01:0a"
                 disk: "vda"
               - name: "worker1"
                 ipaddr: "192.168.126.16"
                 netmask: "255.255.255.0"
                 gw: "192.168.126.1"
-                mgmtif: "ens3"
                 macaddr: "52:54:60:00:01:0b"
                 disk: "vda"
               - name: "worker2"
                 ipaddr: "192.168.126.17"
                 netmask: "255.255.255.0"
                 gw: "192.168.126.1"
-                mgmtif: "ens3"
                 macaddr: "52:54:60:00:01:0c"
                 disk: "vda"
               - name: "worker3"
                 ipaddr: "192.168.126.18"
                 netmask: "255.255.255.0"
                 gw: "192.168.126.1"
-                mgmtif: "ens3"
                 macaddr: "52:54:60:00:01:0d"
                 disk: "vda"
               - name: "worker4"
                 ipaddr: "192.168.126.19"
                 netmask: "255.255.255.0"
                 gw: "192.168.126.1"
-                mgmtif: "ens3"
                 macaddr: "52:54:60:00:01:0e"
                 disk: "vda"
               - name: "worker5"
                 ipaddr: "192.168.126.20"
                 netmask: "255.255.255.0"
                 gw: "192.168.126.1"
-                mgmtif: "ens3"
                 macaddr: "52:54:60:00:01:0f"
                 disk: "vda"
 
@@ -174,7 +164,7 @@ There are some other variables that you can modify to configure the environment 
 
       description: If "true" the Load Balancer service is configured
 
-      default value: 
+      default value:
 
         ocp_prereq_lb: "true"
 
@@ -184,15 +174,15 @@ There are some other variables that you can modify to configure the environment 
 
       description: If "true" the HTTP service is configured
 
-      default value: 
+      default value:
 
         ocp_prereq_http: "true"
-      
+
 * http
 
       description: Variable to configure parameters of the HTTP service
 
-      default value: 
+      default value:
 
         http:
           port: "8080"
@@ -201,7 +191,7 @@ There are some other variables that you can modify to configure the environment 
 
       description: If "true" the NFS service is configured
 
-      default value: 
+      default value:
 
         ocp_prereq_nfs: "true"
 
@@ -209,7 +199,7 @@ There are some other variables that you can modify to configure the environment 
 
       description: If "true" the DNS service is configured
 
-      default value: 
+      default value:
 
         ocp_prereq_dns: "true"
 
@@ -217,7 +207,7 @@ There are some other variables that you can modify to configure the environment 
 
       description: If "true" the DHCP service is configured
 
-      default value: 
+      default value:
 
         ocp_prereq_dhcp: "true"
 
@@ -225,7 +215,7 @@ There are some other variables that you can modify to configure the environment 
 
       description: Variable to configure parameters of the DHCP service. The values must be setup according to the `nodes` variable settings if default network (192.168.126.0/24) is changed.
 
-      default value: 
+      default value:
 
         dhcp:
           router: "192.168.126.1"
@@ -248,7 +238,7 @@ There are some other variables that you can modify to configure the environment 
 
       description: If "true" the PXE service is configured
 
-      default value: 
+      default value:
 
         ocp_prereq_pxe: "true"
 
@@ -256,7 +246,7 @@ There are some other variables that you can modify to configure the environment 
 
       description: Variable to configure parameters of the HTTP service
 
-      default value: 
+      default value:
 
         pxe:
           http_port: "{{ http.port }}"
@@ -265,7 +255,7 @@ There are some other variables that you can modify to configure the environment 
 
       description: If "true" the OCP artifacts (oc client and openshift-installer) are downloaded and images uploaded to the HTTP server. If a install-config.yaml file is provided and the variable `ocp_create_ignition` is set to "true", it will also create the ignition files and upload them to the HTTP server
 
-      default value: 
+      default value:
 
         ocp_prereq_artifacts: "true"
 
@@ -274,7 +264,7 @@ There are some other variables that you can modify to configure the environment 
 
       description: Relative path to the install-config.yaml file. If provided it will be used to gather information like DNS values and to create ignition files if `ocp_create_ignition` variable is set to "true"
 
-      default value: 
+      default value:
 
         ocp_install_config_path: ""
 
@@ -283,7 +273,7 @@ There are some other variables that you can modify to configure the environment 
 
       description: If "true" the role will create local users on the nodes. This could be useful to perform troubleshooting while installing the platform (local users don't need network access).
 
-      default value: 
+      default value:
 
         ocp_inject_user_ignition: "false"
 
@@ -291,7 +281,7 @@ There are some other variables that you can modify to configure the environment 
 
       description: In case that `ocp_inject_user_ignition` is set to "true", the role will use this value as the username of the created local user
 
-      default value: 
+      default value:
 
         ocp_local_username: "redhattrouble"
 
@@ -299,7 +289,7 @@ There are some other variables that you can modify to configure the environment 
 
       description: In case that `ocp_inject_user_ignition` is set to "true", the role will use this value as the password of the created local user
 
-      default value: 
+      default value:
 
         ocp_local_userpass: "redhatfix"
 
@@ -307,19 +297,19 @@ There are some other variables that you can modify to configure the environment 
 
       description: OpenShift release to be used during the deployment. This variable will be only used if `ocp_prereq_artifacts` is set to "true"
 
-      default value: 
+      default value:
 
         ocp_release: "4.4.3"
 
 * ocp_create_ignition
 
-      description: If set to "true" the role will create and upload to HTTP server the ignition files needed for the deployment. In that case, `ocp_prereq_artifacts` must set to "true" and `ocp_install_config_path` must point to a install-config.yaml file. Probably you will also need to check the `ocp_release` to be used 
+      description: If set to "true" the role will create and upload to HTTP server the ignition files needed for the deployment. In that case, `ocp_prereq_artifacts` must set to "true" and `ocp_install_config_path` must point to a install-config.yaml file. Probably you will also need to check the `ocp_release` to be used
 
-      default value: 
+      default value:
 
       ocp_create_ignition: "true"
 
- 
+
 
 Example Playbook
 ----------------
@@ -335,7 +325,7 @@ The playbook that calls the role could be like the one shown below if you are us
         ocp_install_config_path: "install-config.yaml"
         ocp_inject_user_ignition: "true"
         ocp_release: "4.4.3"
-        
+
 ```
 
 Or this could be one file example with the bare-minimum variable setup in case that there is no install-config.yaml file:
