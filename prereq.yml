@@ -1,5 +1,4 @@
 ---
 - hosts: all
   remote_user: root
-  roles:
-    - 5G-SA-POC-prereq
+  include_tasks: "tasks/main.yml"
