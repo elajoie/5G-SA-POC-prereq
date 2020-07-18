@@ -123,7 +123,7 @@ pxe:
 
 ## OCP artifacts
 ocp_prereq_artifacts: "true"
-ocp_install_path: "~/ocp"
+ocp_install_path: "~/ocp/"
 ocp_mirror: "https://mirror.openshift.com/pub/openshift-v4"
 ocp_install_config_path: "~/ocp/install-config.yaml"
 
