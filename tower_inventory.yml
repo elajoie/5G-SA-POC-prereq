@@ -2,7 +2,7 @@
 srv_interface: "enp7s0.400"
 nodes_subnet24: "172.16.0"
 baseName: "lab"
-baseDoamin: "local"
+baseDomain: "local"
 
 ssh_port: "22"
 lbip: "172.16.0.0.7"
