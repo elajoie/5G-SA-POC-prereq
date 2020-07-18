@@ -1,2 +1,19 @@
 ---
 # vars file for ocp-prereq-role
+packages_lb:
+  - haproxy
+  - policycoreutils-python-utils
+  - setools-console
+ports_lb:
+  - 80/tcp
+  - 443/tcp
+  - 6443/tcp
+  - 22623/tcp
+#https://unix.stackexchange.com/questions/363878/which-selinux-policies-apply-to-haproxy
+selinux_policy: targeted
+selinux_state: enforcing
+selinux_ports:
+  - { ports: '6443', proto: 'tcp', setype: 'http_port_t', state: 'present' }
+  - { ports: '22623', proto: 'tcp', setype: 'http_port_t', state: 'present' }
+  - { ports: '9000', proto: 'tcp', setype: 'http_port_t', state: 'present' }
+#check results via semanage port -l | grep -E 'http_cache_port_t|commplex_main_port_t|http_port_t'

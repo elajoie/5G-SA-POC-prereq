@@ -1,8 +1,9 @@
 ---
 srv_interface: "enp7s0.400"
-nodes_subnet24: '172.16.0'
-
+nodes_subnet24: "172.16.0"
+domain_name: "{{ metadata.name }}.{{ baseDomain }}"
 ssh_port: "22"
+lbip: "172.16.0.0.7"
 
 ocp:
     api_ip: "{{ lbip }}"
@@ -69,6 +70,10 @@ nodes:
       macaddr: "3c:fd:fe:ab:b3:71"
       disk: "nvme0n1"
 
+
+## Secret Generation
+ocp_secret: "true"
+
 ## Load Balancer
 ocp_prereq_lb: "true"
 
@@ -116,9 +121,9 @@ pxe:
 
 ## OCP artifacts
 ocp_prereq_artifacts: "true"
-ocp_install_path: "<change to variable storing file>"
+ocp_install_path: "~/ocp"
 ocp_mirror: "https://mirror.openshift.com/pub/openshift-v4"
-ocp_install_config_path: ""
+ocp_install_config_path: "~/ocp/install-config.yaml"
 
 ocp_inject_user_ignition: "false"
 ocp_local_username: "redhattrouble"
