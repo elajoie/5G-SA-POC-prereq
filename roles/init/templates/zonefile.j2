@@ -13,7 +13,7 @@ ns1	IN	A	{{ srv_ip }}
 smtp	IN	A	{{ srv_ip }}
 ;
 {{ dnshostname }}	IN	A	{{ srv_ip }}
-{{ dnshostname }}	IN	A	{{ srv_ip }}
+{{ dnshostname.split('.')[0] }}	IN	A	{{ srv_ip }}
 ;
 ; The api points to the IP of your load balancer
 api		IN	A	{{ ocp.api_ip}}
