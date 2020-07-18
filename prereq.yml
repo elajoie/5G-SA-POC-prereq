@@ -2,4 +2,4 @@
 - hosts: all
   remote_user: root
   roles:
-    - 5G-SA-POC-prereq
+    - { role: init }
