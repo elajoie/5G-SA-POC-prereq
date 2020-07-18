@@ -20,8 +20,8 @@
 - include_tasks: "ocp-dhcp.yml"
   when: ocp_prereq_dhcp == "true"
 
-#- include_tasks: "ocp-pxe.yml"
-#  when: ocp_prereq_pxe == "true"
+- include_tasks: "ocp-pxe.yml"
+  when: ocp_prereq_pxe == "true"
 
-#- include_tasks: "ocp-artifacts.yml"
-#  when: ocp_prereq_artifacts == "true"
+- include_tasks: "ocp-artifacts.yml"
+  when: ocp_prereq_artifacts == "true"
