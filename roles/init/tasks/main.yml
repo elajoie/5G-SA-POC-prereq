@@ -2,9 +2,6 @@
 # tasks file for ocp-prereq-role
 - include_vars: "vault"
 
-  tags: [ install, remove ]
-  when: ocp_install_config_path != ""
-
 - include_tasks: "ocp-secret.yml"
   when: ocp_secret == "true"
   tags: [ install, remove ]
