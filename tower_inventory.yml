@@ -106,8 +106,8 @@ dhcp:
   poolend: "{{ nodes_subnet24 | default ('192.168.126')}}.254"
   ipid: "{{ nodes_subnet24 | default ('192.168.126')}}.0"
   netmaskid: "255.255.255.0"
-  dns: "{{ dnsipaddr }}"
-  domainname: "{{ dns.subdomain }}.{{ dns.domain }}"
+  dns: "{{ srv_ip }}"
+  domainname: "{{ baseName }}.{{ baseDomain }}"
 
 
 
