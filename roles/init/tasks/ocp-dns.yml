@@ -15,15 +15,6 @@
           - firewalld
         state: present
 
-    - name: Get IP
-      shell: "nmcli con show '{{ srv_interface }}' | grep 'ipv4.addresses' | awk '{print $2}' | awk -F / '{print $1}'"
-      register: dnsipaddr
-
-    - name: Setting IP as a fact
-      set_fact:
-        dnsipaddr: "{{ dnsipaddr.stdout }}"
-
-
     - name: Get Hostname
       shell: "hostname"
       register: dnshostname
@@ -32,15 +23,10 @@
       set_fact:
         dnshostname: "{{ dnshostname.stdout }}"
 
-
-
     - name: Write out named file
       template:
         src: named.conf.j2
         dest: /etc/named.conf
-
-
-
 
     - copy:
         dest: "/usr/local/bin/set-dns-serial.sh"
@@ -59,7 +45,6 @@
             fi
           fi
 
-
     - name: Set zone serial number
       shell: "/usr/local/bin/set-dns-serial.sh"
       register: dymanicserialnumber
@@ -73,16 +58,13 @@
         src: zonefile.j2
         dest: /var/named/zonefile.db
 
-
     - name: Write out reverse zone file
       template:
         src: reverse.j2
         dest: /var/named/reverse.db
 
-
     - name: Best effort SELinux repair - DNS
       shell: "restorecon -vR /var/named || true"
-
 
     - name: Starting services
       service:
@@ -92,40 +74,19 @@
       with_items:
         - named
 
-
-
     - name: Set the local resolv.conf file
       template:
         src: resolv.conf.j2
         dest: /etc/resolv.conf
 
-    - name: Enable firewalld
-      systemd:
-        name: firewalld
-        state: started
-        enabled: True
-
-
-    - name: Get Firewalld ZONE
-      shell: "IFACE=$(nmcli con show '{{ srv_interface }}' | grep connection.interface-name | awk '{print $2}') ; ZONE=$(firewall-cmd --list-all-zones | grep -B 3 $IFACE | head -n 1 | awk '{print $1}') ; echo $ZONE"
-      register: firewalldzone
-
     - name: Configure Firewalld
       ignore_errors: yes
       firewalld:
-        zone: "{{ firewalldzone.stdout }}"
+        zone: public
         state: enabled
         permanent: yes
-        port: "{{ item }}"
-      with_items:
-        - "{{ ssh_port }}/tcp"
-        - 53/udp
-
-    - name: Reload Firewalld
-      ignore_errors: yes
-      shell: |
-        firewall-cmd --reload
-
+        immediate: yes
+        port: 53/udp
 
 - name: Remove DNS
   become: true

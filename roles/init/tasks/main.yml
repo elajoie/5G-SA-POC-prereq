@@ -8,9 +8,8 @@
 - include_tasks: "ocp-lb.yml"
   when: ocp_prereq_lb == "true"
 
-#- include_tasks: "ocp-dns.yml"
-#  when: ocp_prereq_dns == "true"
-#  tags: [ install, remove ]
+- include_tasks: "ocp-dns.yml"
+  when: ocp_prereq_dns == "true"
 
 #- include_tasks: "ocp-http.yml"
 #  when: ocp_prereq_http == "true"

@@ -1,24 +1,24 @@
 $TTL 1W
-@	IN	SOA	ns1.{{ dns.subdomain }}.{{ dns.domain }}.	root (
+@	IN	SOA	ns1.{{ baseName }}.{{ baseDomain }}.	root (
 			{{ serialnumber }}	; serial
 			3H		; refresh (3 hours)
 			30M		; retry (30 minutes)
 			2W		; expiry (2 weeks)
 			1W )		; minimum (1 week)
-	IN	NS	ns1.{{ dns.subdomain }}.{{ dns.domain }}.
+	IN	NS	ns1.{{ baseName }}.{{ baseDomain }}.
 ;
 ; syntax is "last octet" and the host must have fqdn with trailing dot
 {% for m in nodes.masters %}
-{{ m.ipaddr.split('.')[3] }}	IN	PTR	{{ m.name }}.{{ dns.subdomain }}.{{ dns.domain }}.
+{{ m.ipaddr.split('.')[3] }}	IN	PTR	{{ m.name }}.{{ baseName }}.{{ baseDomain }}.
 {% endfor %}
 ;
-{{ nodes.bootstrap.ipaddr.split('.')[3] }}	IN	PTR	{{ nodes.bootstrap.name }}.{{ dns.subdomain }}.{{ dns.domain }}.
+{{ nodes.bootstrap.ipaddr.split('.')[3] }}	IN	PTR	{{ nodes.bootstrap.name }}.{{ baseName }}.{{ baseDomain }}.
 ;
-{{ dnsipaddr.split('.')[3] }}	IN	PTR	api.{{ dns.subdomain }}.{{ dns.domain }}.
-{{ dnsipaddr.split('.')[3] }}	IN	PTR	api-int.{{ dns.subdomain }}.{{ dns.domain }}.
+{{ srv_ip.split('.')[3] }}	IN	PTR	api.{{ baseName }}.{{ baseDomain }}.
+{{ srv_ip.split('.')[3] }}	IN	PTR	api-int.{{ baseName }}.{{ baseDomain }}.
 ;
 {% for w in nodes.workers %}
-{{ w.ipaddr.split('.')[3] }}	IN	PTR	{{ w.name }}.{{ dns.subdomain }}.{{ dns.domain }}.
+{{ w.ipaddr.split('.')[3] }}	IN	PTR	{{ w.name }}.{{ baseName }}.{{ baseDomain }}.
 {% endfor %}
 ;
 ;EOF

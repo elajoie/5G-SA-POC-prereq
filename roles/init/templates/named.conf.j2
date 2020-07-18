@@ -57,12 +57,12 @@ zone "." IN {
 };
 
 ########### Add what's between these comments ###########
-zone "{{ dns.subdomain }}.{{ dns.domain }}" IN {
+zone "{{ baseName }}.{{ baseDomain }}" IN {
 	type	master;
 	file	"zonefile.db";
 };
 
-zone "{{ dnsipaddr.split('.')[2] }}.{{ dnsipaddr.split('.')[1] }}.{{ dnsipaddr.split('.')[0] }}.in-addr.arpa" IN {
+zone "{{ srv_ip.split('.')[2] }}.{{ srv_ip.split('.')[1] }}.{{ srv_ip.split('.')[0] }}.in-addr.arpa" IN {
 	type	master;
 	file	"reverse.db";
 };

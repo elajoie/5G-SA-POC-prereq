@@ -1,16 +1,16 @@
 ---
 srv_interface: "enp7s0.400"
+srv_ip: "172.16.0.7"
 nodes_subnet24: "172.16.0"
 baseName: "lab"
 baseDomain: "local"
 
 ssh_port: "22"
-lbip: "172.16.0.0.7"
 
 ocp:
-    api_ip: "{{ lbip }}"
-    api_int_ip: "{{ lbip }}"
-    apps_ip: "{{ lbip }}"
+    api_ip: "{{ srv_ip }}"
+    api_int_ip: "{{ srv_ip }}"
+    apps_ip: "{{ srv_ip }}"
 
 
 nodes:
@@ -92,8 +92,6 @@ ocp_prereq_nfs: "true"
 ## DNS
 ocp_prereq_dns: "true"
 dns:
-  domain: "{{ baseDomain | default('127.0.0.1.nip.io') }}"
-  subdomain: "{{ metadata.name | default('ocp') }}"
   forwarder1: "8.8.8.8"
   forwarder2: "8.8.4.4"
 
