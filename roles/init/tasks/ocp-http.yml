@@ -72,7 +72,6 @@
         port: "{{ item }}"
       with_items:
         - "{{ http.port }}/tcp"
-        - "{{ ssh_port }}/tcp"
 
     - name: Reload Firewalld
       ignore_errors: yes
