@@ -66,7 +66,6 @@
         permanent: yes
         port: "{{ item }}"
       with_items:
-        - "{{ ssh_port }}/tcp"
         - 67/udp
         - 68/udp
 
