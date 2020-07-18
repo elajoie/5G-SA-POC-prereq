@@ -1,6 +1,5 @@
 ---
 - hosts: all
   remote_user: root
-  tags: [ install, remove ]
   roles:
     - { role: init }
