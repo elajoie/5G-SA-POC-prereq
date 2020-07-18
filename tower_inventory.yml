@@ -1,7 +1,9 @@
 ---
 srv_interface: "enp7s0.400"
 nodes_subnet24: "172.16.0"
-domain_name: "{{ metadata.name }}.{{ baseDomain }}"
+baseName: "lab"
+baseDoamin: "local"
+
 ssh_port: "22"
 lbip: "172.16.0.0.7"
 
@@ -124,10 +126,6 @@ ocp_prereq_artifacts: "true"
 ocp_install_path: "~/ocp"
 ocp_mirror: "https://mirror.openshift.com/pub/openshift-v4"
 ocp_install_config_path: "~/ocp/install-config.yaml"
-
-ocp_inject_user_ignition: "false"
-ocp_local_username: "redhattrouble"
-ocp_local_userpass: "redhatfix"
 
 ocp_release: "4.4.3"
 ocp_create_ignition: "true"
