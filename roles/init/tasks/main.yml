@@ -4,11 +4,9 @@
 
 - include_tasks: "ocp-secret.yml"
   when: ocp_secret == "true"
-  tags: [ install, remove ]
 
 - include_tasks: "ocp-lb.yml"
   when: ocp_prereq_lb == "true"
-  tags: [ install, remove ]
 
 #- include_tasks: "ocp-dns.yml"
 #  when: ocp_prereq_dns == "true"
