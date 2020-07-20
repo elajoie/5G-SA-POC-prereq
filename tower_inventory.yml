@@ -103,7 +103,7 @@ dhcp:
   bcast: "{{ nodes_subnet24 | default ('192.168.126')}}.255"
   netmask: "255.255.255.0"
   poolstart: "{{ nodes_subnet24 | default ('192.168.126')}}.128"
-  poolend: "{{ nodes_subnet24 | default ('192.168.126')}}.254"
+  poolend: "{{ nodes_subnet24 | default ('192.168.126')}}.252"
   ipid: "{{ nodes_subnet24 | default ('192.168.126')}}.0"
   netmaskid: "255.255.255.0"
   dns: "{{ srv_ip }}"
