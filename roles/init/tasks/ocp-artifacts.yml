@@ -185,19 +185,13 @@
       shell: |
         mkdir -p /var/www/html/ignition
         cp {{ ocp_install_path }}/install/{{ item }} /var/www/html/ignition/
+        chmod 0644 /var/www/html/ignition/*
       with_items: "{{ files_to_copy.stdout_lines }}"
-
 
     - name: Create manifests
       shell: |
         /usr/local/bin/openshift-install create manifests --dir={{ ocp_install_path }}/install/
 
-    - name: tweak permissions
-      file:
-        dest: /var/www/html/ignition/
-        state: directory
-        recurse: yes
-        mode: '0644'
 
 - name: Remove OCP binaries
   become: true
