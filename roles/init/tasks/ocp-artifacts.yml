@@ -192,6 +192,10 @@
       shell: |
         /usr/local/bin/openshift-install create manifests --dir={{ ocp_install_path }}/install/
 
+    - name: Template a .treeinfo for bootstrap install
+      template:
+        src: .treeinfo.j2
+        dest: "{{ ocp_install_path }}/install/.treeinfo"
 
 - name: Remove OCP binaries
   become: true
