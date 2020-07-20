@@ -194,7 +194,7 @@
 
     - name: Set ingition to chmod 644
       file:
-        path: /var/www/html/ignition
+        path: /var/www/html/ignition/*
         mode: '0644'
 
 - name: Remove OCP binaries
