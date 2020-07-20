@@ -194,7 +194,7 @@
 
     - name: tweak permissions
       file:
-        dest: /var/www/html/ignition
+        dest: /var/www/html/ignition/
         state: directory
         recurse: yes
         mode: '0644'
