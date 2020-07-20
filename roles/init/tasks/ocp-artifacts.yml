@@ -195,7 +195,7 @@
     - name: Template a .treeinfo for bootstrap install
       template:
         src: .treeinfo.j2
-        dest: "{{ ocp_install_path }}/install/.treeinfo"
+        dest: /var/www/html/images/.treeinfo"
 
 - name: Remove OCP binaries
   become: true
