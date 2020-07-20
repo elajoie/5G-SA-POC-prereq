@@ -9,6 +9,7 @@ ports_lb:
   - 443/tcp
   - 6443/tcp
   - 22623/tcp
+  - 9000/tcp
 #https://unix.stackexchange.com/questions/363878/which-selinux-policies-apply-to-haproxy
 selinux_policy: targeted
 selinux_state: enforcing
