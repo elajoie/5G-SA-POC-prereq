@@ -192,10 +192,12 @@
       shell: |
         /usr/local/bin/openshift-install create manifests --dir={{ ocp_install_path }}/install/
 
-    - name: Set ingition to chmod 644
+    - name: tweak permissions
       file:
-        path: /var/www/html/ignition/*
+        dest: "{{ item }}"
         mode: '0644'
+      with_fileglob:
+        - '/var/www/html/ignition/*'
 
 - name: Remove OCP binaries
   become: true
