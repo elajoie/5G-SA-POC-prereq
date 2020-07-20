@@ -194,10 +194,10 @@
 
     - name: tweak permissions
       file:
-        dest: "{{ item }}"
+        dest: /var/www/html/ignition
+        state: directory
+        recurse: yes
         mode: '0644'
-      with_fileglob:
-        - '/var/www/html/ignition/*'
 
 - name: Remove OCP binaries
   become: true
