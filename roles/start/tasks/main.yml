@@ -1,5 +1,10 @@
 ---
 # tasks file for createVMs
+- name: Install virt-install
+  dnf:
+    name: virt-install
+    state: latest
+
 - name: Setup OCP bootstrap VM
   command: "virt-install
     --name {{ nodes.bootstrap.name }}
