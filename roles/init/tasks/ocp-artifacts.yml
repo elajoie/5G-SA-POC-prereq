@@ -47,13 +47,10 @@
       shell: |
         curl --compressed -J -L -o {{ ocp_install_path }}/artifacts/openshift-installer-{{ ocp_release }}/openshift-install-linux-{{ ocp_release }}.tar.gz  {{ ocp_mirror }}/clients/ocp/{{ ocp_release }}/openshift-install-linux-{{ ocp_release }}.tar.gz
         tar -C {{ ocp_install_path }}/artifacts/openshift-installer-{{ ocp_release }}/ -xvf {{ ocp_install_path }}/artifacts/openshift-installer-{{ ocp_release }}/openshift-install-linux-{{ ocp_release }}.tar.gz
-
     - name: Download Openshift client
       shell: |
         curl --compressed -J -L -o {{ ocp_install_path }}/artifacts/openshift-client-{{ ocp_release }}/openshift-client-linux-{{ ocp_release }}.tar.gz  {{ ocp_mirror }}/clients/ocp/{{ ocp_release }}/openshift-client-linux-{{ ocp_release }}.tar.gz
         tar -C {{ ocp_install_path }}/artifacts/openshift-client-{{ ocp_release }}/  -xvf  {{ ocp_install_path }}/artifacts/openshift-client-{{ ocp_release }}/openshift-client-linux-{{ ocp_release }}.tar.gz
-
-
     - name: Create a symbolic link
       ignore_errors: yes
       become: yes
@@ -70,8 +67,6 @@
     - name: SELinux restorecon
       shell: |
         restorecon -vR /var/www/html/
-
-
     - name: Download RHCOS compressed metal BIOS
       shell: |
         NAME_METAL=$(curl -s {{ ocp_mirror }}/dependencies/rhcos/4.{{  ocp_release.split(".")[1] | lower }}/latest/ | grep rhcos |  awk -F '<a href=\"' '{print $2}' | awk -F '\">' '{print $1}' | grep metal)
@@ -105,12 +100,11 @@
         cp {{ ocp_install_path }}/artifacts/openshift-images/rhcos-4.{{  ocp_release.split(".")[1] | lower }}-metal.raw.gz /var/www/html/images/rhcos-metal.raw.gz
         cp {{ ocp_install_path }}/artifacts/openshift-images/rhcos-4.{{  ocp_release.split(".")[1] | lower }}-installer-kernel /var/www/html/images/rhcos-installer-kernel
         cp {{ ocp_install_path }}/artifacts/openshift-images/rhcos-4.{{  ocp_release.split(".")[1] | lower }}-installer-initramfs.img /var/www/html/images/rhcos-installer-initramfs.img
-
-
     - name: Create installation directory
       file:
         path: "{{ ocp_install_path }}/install"
         state: directory
+
 
 
 - name: Create ignition files
@@ -121,12 +115,23 @@
   tags: install
   block:
 
+    - name: Copy install-config.yaml
+      copy:
+        src: "{{ ocp_install_config_path }}"
+        dest: "{{ ocp_install_path }}/install-config.yaml"
+        owner: "{{ ansible_user}}"
+
+    - name: Copy install-config.yaml in install directory
+      copy:
+        src: "{{ ocp_install_config_path }}"
+        dest: "{{ ocp_install_path }}/install/install-config.yaml"
+        owner: "{{ ansible_user}}"
+
+
+
     - name: Create ignition files
       shell: |
         /usr/local/bin/openshift-install create ignition-configs --dir={{ ocp_install_path }}/install/
-
-
-
     - name: Injecting local user in ignition files
       when:
         - ocp_inject_user_ignition == "true"
@@ -162,9 +167,6 @@
             bootstrapname=$((find . -maxdepth 1 -type f | grep ign$) | cut -d'/' -f2 | grep boot)
             mv $bootstrapname $bootstrapname.original ; touch $bootstrapname
             echo "$(cat  $bootstrapname.original | awk -F ']},"storage":' '{print $1}'),$(cat /tmp/ignition_userpasswd)]},\"storage\":$(cat  $bootstrapname.original | awk -F ']},"storage":' '{print $2}')" > $bootstrapname
-
-
-
     - name: Copy to master ignitions
       copy:
         remote_src: yes
@@ -190,18 +192,12 @@
       shell: |
         mkdir -p /var/www/html/ignition
         cp {{ ocp_install_path }}/install/{{ item }} /var/www/html/ignition/
-        chmod 0644 /var/www/html/ignition/*
       with_items: "{{ files_to_copy.stdout_lines }}"
+
 
     - name: Create manifests
       shell: |
         /usr/local/bin/openshift-install create manifests --dir={{ ocp_install_path }}/install/
-
-- name: Template a .treeinfo for bootstrap install
-  template:
-    src: .treeinfo.j2
-    dest: /var/www/html/install/.treeinfo"
-
 - name: Remove OCP binaries
   become: true
   tags: remove
