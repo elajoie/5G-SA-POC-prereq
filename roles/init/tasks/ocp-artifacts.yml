@@ -107,7 +107,12 @@
         cp {{ ocp_install_path }}/artifacts/openshift-images/rhcos-4.{{  ocp_release.split(".")[1] | lower }}-installer-initramfs.img /var/www/html/images/rhcos-installer-initramfs.img
 
 
+    - name: Create installation directory
+      file:
+        path: "{{ ocp_install_path }}/install"
+        state: directory
 
+        
 - name: Create ignition files
   when:
     - ocp_create_ignition == "true"
@@ -192,6 +197,10 @@
       shell: |
         /usr/local/bin/openshift-install create manifests --dir={{ ocp_install_path }}/install/
 
+    - name: Template a .treeinfo for bootstrap install
+      template:
+        src: .treeinfo.j2
+        dest: /var/www/html/install/.treeinfo"
 
 - name: Remove OCP binaries
   become: true
