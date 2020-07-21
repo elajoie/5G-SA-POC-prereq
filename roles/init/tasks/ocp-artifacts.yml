@@ -198,7 +198,7 @@
 - name: Template a .treeinfo for bootstrap install
   template:
     src: .treeinfo.j2
-    dest: /var/www/html/install/.treeinfo"
+    dest: /var/www/html/images/.treeinfo"
 
 - name: Remove OCP binaries
   become: true
