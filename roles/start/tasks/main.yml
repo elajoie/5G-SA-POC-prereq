@@ -14,7 +14,6 @@
     --vcpus 8
     --os-type linux
     --os-variant rhel8.2
-    --network network=VLAN501MGMT
     --network network=ServicesTrunk,mac=52:54:60:11:11:11
     --noautoconsole
     --location http://{{ srv_ip }}:8080/images/
