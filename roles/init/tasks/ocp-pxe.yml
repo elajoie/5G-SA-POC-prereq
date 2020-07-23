@@ -5,115 +5,99 @@
   tags: install
   block:
 
-    - name: Install packages for PXE
-      yum:
-        name:
-          - syslinux
-          - tftp-server
-          - firewalld
-        state: present
+    - name: Install packages
+      dnf:
+        name: "{{ packages_pxe }}"
+        state: latest
 
+    - name: setup firewall
+      firewalld:
+        service: "{{ item }}"
+        permanent: yes
+        state: enabled
+        immediate: yes
+        zone: public
+      with_items: "{{ services_pxe }}"
 
-    - name: Create TFTP config
+    - name: Create a directory if it does not exist
       file:
-        path: /var/lib/tftpboot/pxelinux.cfg
+        path: "{{ item }}"
         state: directory
-        mode: 0755
+      with_items: "{{ folders_pxe }}"
 
+#Put the boot iso in the web servers root directory manually when using tower
+#    - name: "Copy over iso file to tftp server - {{ ansible_facts['nodename'] }}"
+#      copy:
+#        src: "{{ boot_iso }}"
+#        dest: "/var/www/html/{{ boot_iso }}"
 
-    - name: Create TFTP RHCOS dir
-      file:
-        path: /var/lib/tftpboot/rhcos
-        state: directory
-        mode: 0755
+    - name: Mount boot iso read-only
+      mount:
+        path: "{{ mount_point }}"
+        src: "/var/www/html/{{ boot_iso }}"
+        fstype: iso9660
+        opts: ro,noauto
+        state: mounted
 
+    - name: Copy over files for UEFI
+      copy:
+        remote_src: yes
+        src: "{{ efi_dir }}{{ item }}"
+        dest: "{{ tftp_dir }}/uefi/{{ item }}"
+      with_items: "{{ efifiles }}"
 
+    - name: Copy over files for booting RHEL
+      copy:
+        remote_src: yes
+        src: "{{ boot_dir }}{{ item }}"
+        dest: "{{ tftp_dir }}/images/{{ rhel_version}}/{{ item }}"
+      with_items: "{{ bootfiles }}"
 
-    - name: Copy over files needed for TFTP
-      shell: "cp -a /usr/share/syslinux/* /var/lib/tftpboot"
+    - name: Copy over files for stage2
+      copy:
+        remote_src: yes
+        src: "{{ mount_point }}/images"
+        dest: "/var/www/html/{{ rhel_version }}/"
 
-
-    - name: Set the tftp file pre-procesed
+    - name: Template a file for kickstart onto tftp server
       template:
-        src: all-default.j2
-        dest: /var/lib/tftpboot/pxelinux.cfg/all-default
-        mode: 0555
+        src: ks.cfg.j2
+        dest: /var/www/html/kickstarts/ks.cfg
 
+    - name: Template a file for grub menu onto tftp server
+      template:
+        src: grub.cfg.j2
+        dest: "{{ tftp_dir }}/uefi/grub.cfg"
 
-    - name: Installing PXE file extractor
-      copy:
-        src: extract-pxe-files.sh
-        dest: /usr/local/bin/extract-pxe-files
-        mode: '0555'
+    - name: Template a file for custom kickstart onto tftp server
+      template:
+        src: ks.cfg-mac.j2
+        dest: "/var/www/html/kickstarts/ks.cfg-01-{{ [item].macaddr | hwaddr('eui48') | lower }}"
+      with_items:
+        - "{{ node.masters }}"
+        - "{{ node.workers }}"
+        - "{{ node.bootstrap }}"
 
+    - name: Template a file for custom grub menu onto tftp server
+      template:
+        src: grub.cfg-mac.j2
+        dest: "{{ tftp_dir }}/uefi/grub.cfg-01-{{ [item].macaddr | hwaddr('eui48') | lower }}"
+      with_items:
+        - "{{ node.masters }}"
+        - "{{ node.workers }}"
+        - "{{ node.bootstrap }}"
 
-    - name: Extract PXE files
-      shell: "/usr/local/bin/extract-pxe-files /var/lib/tftpboot/pxelinux.cfg/all-default /var/lib/tftpboot/pxelinux.cfg"
-
-
-
-    - name: Installing TFTP Systemd helper
-      copy:
-        src: start-tftp.sh
-        dest: /usr/local/bin/start-tftp.sh
-        mode: '0555'
-
-    - name: Installing TFTP Systemd unit file
-      copy:
-        src: helper-tftp.service
-        dest: /etc/systemd/system/helper-tftp.service
-        mode: '0655'
-
-    - name: Systemd daemon reload
-      systemd:
-        daemon_reload: yes
-
-
-
-    - name: Starting PXE services
+    - name: Start and ebable TFTP and xinetd service
       service:
         name: "{{ item }}"
-        enabled: yes
         state: restarted
-      with_items:
-        - tftp
-        - helper-tftp
-
-    - name: Unmasking Services
-      systemd:
-        name: "{{ item }}"
         enabled: yes
-        masked: no
-      with_items:
-        - tftp
+      with_items: "{{ systemd_services_pxe }}"
 
-    - name: Enable firewalld
-      systemd:
-        name: firewalld
-        state: started
-        enabled: True
-
-
-    - name: Get Firewalld ZONE
-      shell: "IFACE=$(nmcli con show '{{ srv_interface }}' | grep connection.interface-name | awk '{print $2}'); ZONE=$(firewall-cmd --list-all-zones | grep -B 3 $IFACE | head -n 1 | awk '{print $1}') ; echo $ZONE"
-      register: firewalldzone
-
-    - name: Configure Firewalld
-      ignore_errors: yes
-      firewalld:
-        zone: "{{ firewalldzone.stdout }}"
-        state: enabled
-        permanent: yes
-        port: "{{ item }}"
-      with_items:
-        - 67/udp
-        - 4011/udp
-        - 69/udp
-
-    - name: Reload Firewalld
-      ignore_errors: yes
-      shell: |
-        firewall-cmd --reload
+    - name: Unmount boot iso
+      mount:
+        path: "{{ mount_point }}"
+        state: absent
 
 - name: Remove PXE
   become: true

@@ -21,25 +21,33 @@ nodes:
     gw: "{{ nodes_subnet24 | default ('192.168.126')}}.254"
     macaddr: "52:54:60:11:11:11"
     disk: "vda"
+    boot: "bios"
+    nic_pxe: enp1s0
   masters:
     - name: "master1"
       ipaddr: "{{ nodes_subnet24 | default ('192.168.126')}}.11"
       netmask: "255.255.255.0"
       gw: "{{ nodes_subnet24 | default ('192.168.126')}}.254"
-      macaddr: "0c:c4:7a:20:68:c9"
+      macaddr: "0c:c4:7a:20:60:c9"
       disk: "sda"
+      boot: "bios"
+      nic_pxe: ens1f1
     - name: "master2"
       ipaddr: "{{ nodes_subnet24 | default ('192.168.126')}}.12"
       netmask: "255.255.255.0"
       gw: "{{ nodes_subnet24 | default ('192.168.126')}}.254"
       macaddr: "0c:c4:7a:20:61:c9"
       disk: "sda"
+      boot: "bios"
+      nic_pxe: ens1f1
     - name: "master3"
       ipaddr: "{{ nodes_subnet24 | default ('192.168.126')}}.13"
       netmask: "255.255.255.0"
       gw: "{{ nodes_subnet24 | default ('192.168.126')}}.254"
       macaddr: "3c:fd:fe:9e:7e:21"
       disk: "sda"
+      boot: "uefi"
+      nic_pxe: ens803f1
   workers:
     - name: "worker1"
       ipaddr: "{{ nodes_subnet24 | default ('192.168.126')}}.21"
@@ -47,30 +55,40 @@ nodes:
       gw: "{{ nodes_subnet24 | default ('192.168.126')}}.254"
       macaddr: "3c:fd:fe:9e:7b:a9"
       disk: "sdb"
+      boot: "uefi"
+      nic_pxe: ens803f1
     - name: "worker2"
       ipaddr: "{{ nodes_subnet24 | default ('192.168.126')}}.22"
       netmask: "255.255.255.0"
       gw: "{{ nodes_subnet24 | default ('192.168.126')}}.254"
       macaddr: "3c:fd:fe:aa:46:60"
       disk: "sda"
+      boot: "uefi"
+      nic_pxe: ens802f0
     - name: "worker3"
       ipaddr: "{{ nodes_subnet24 | default ('192.168.126')}}.23"
       netmask: "255.255.255.0"
       gw: "{{ nodes_subnet24 | default ('192.168.126')}}.254"
       macaddr: "3c:fd:fe:ab:b0:39"
       disk: "nvme0n1"
+      boot: "uefi"
+      nic_pxe: ens786f1
     - name: "worker4"
       ipaddr: "{{ nodes_subnet24 | default ('192.168.126')}}.24"
       netmask: "255.255.255.0"
       gw: "{{ nodes_subnet24 | default ('192.168.126')}}.254"
       macaddr: "3c:fd:fe:ab:a6:81"
       disk: "nvme0n1"
+      boot: "uefi"
+      nic_pxe: ens786f1
     - name: "worker5"
       ipaddr: "{{ nodes_subnet24 | default ('192.168.126')}}.25"
       netmask: "255.255.255.0"
       gw: "{{ nodes_subnet24 | default ('192.168.126')}}.254"
       macaddr: "3c:fd:fe:ab:b3:71"
       disk: "nvme0n1"
+      boot: "uefi"
+      nic_pxe: ens786f1
 
 
 ## Secret Generation
@@ -123,7 +141,7 @@ pxe:
 ocp_prereq_artifacts: "true"
 ocp_install_path: "/root/ocp"
 ocp_mirror: "https://mirror.openshift.com/pub/openshift-v4"
-ocp_install_config_path: "~/ocp/install-config.yaml"
+ocp_install_config_path: /var/www/html/ignition/install-config.yaml"
 
-ocp_release: "4.4.3"
+ocp_release: "4.5.2"
 ocp_create_ignition: "true"

@@ -18,3 +18,30 @@ selinux_ports:
   - { ports: '22623', proto: 'tcp', setype: 'http_port_t', state: 'present' }
   - { ports: '9000', proto: 'tcp', setype: 'http_port_t', state: 'present' }
 #check results via semanage port -l | grep -E 'http_cache_port_t|commplex_main_port_t|http_port_t'
+
+mount_point: /tmp/iso
+efi_dir: "{{ mount_point }}/EFI/BOOT/"
+boot_dir: "{{ mount_point }}/images/pxeboot/"
+services_pxe:
+  - tftp
+packages_pxe:
+  - tftp-server
+  - dhcp-server
+  - xinetd
+efifiles:
+  - BOOTX64.EFI
+  - grubx64.efi
+bootfiles:
+  - initrd.img
+  - vmlinuz
+tftp_dir: /var/lib/tftpboot
+folders_pxe:
+  - "{{ tftp_dir }}/uefi"
+  - "{{ tftp_dir }}/images/{{ rhel_version }}"
+  - /var/www/html/kickstarts
+  - "/var/www/html/{{ rhel_version }}"
+systemd_services_pxe:
+  - tftp.service
+  - xinetd.service
+boot_iso: rhel-8.2-x86_64-boot.iso
+rhel_version: RHEL-8.2

@@ -19,12 +19,12 @@ subnet {{  dhcp.ipid }} netmask {{  dhcp.netmaskid }} {
 
 	class "pxeclients" {
   	  match if substring (option vendor-class-identifier, 0, 9) = "PXEClient";
-  	  next-server {{ ansible_default_ipv4["address"] }};
-
-  	  if option architecture-type = 00:07 {
-  	    filename "uefi/BOOTX64.EFI";
-  	  } else {
+  	  next-server {{ srv_ip }};
+      # https://tools.ietf.org/html/rfc4578#section-2.1 set default to 00:00 so the catch all gets 00:07 and 00:09
+  	  if option architecture-type = 00:00 {
   	    filename "pxelinux/pxelinux.0";
+  	  } else {
+  	    filename "uefi/BOOTX64.EFI";
   		}
     }
 }
@@ -50,9 +50,6 @@ host {{ w.name }} {
 	fixed-address {{ w.ipaddr }};
 }
 {% endfor %}
-
-# this is PXE specific
-filename "pxelinux.0";
  
 
 
