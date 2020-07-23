@@ -74,18 +74,18 @@
         src: ks.cfg-mac.j2
         dest: "/var/www/html/kickstarts/ks.cfg-01-{{ [item].macaddr | hwaddr('eui48') | lower }}"
       with_items:
-        - "{{ node.masters }}"
-        - "{{ node.workers }}"
-        - "{{ node.bootstrap }}"
+        - "{{ nodes.masters }}"
+        - "{{ nodes.workers }}"
+        - "{{ nodes.bootstrap }}"
 
     - name: Template a file for custom grub menu onto tftp server
       template:
         src: grub.cfg-mac.j2
         dest: "{{ tftp_dir }}/uefi/grub.cfg-01-{{ [item].macaddr | hwaddr('eui48') | lower }}"
       with_items:
-        - "{{ node.masters }}"
-        - "{{ node.workers }}"
-        - "{{ node.bootstrap }}"
+        - "{{ nodes.masters }}"
+        - "{{ nodes.workers }}"
+        - "{{ nodes.bootstrap }}"
 
     - name: Start and ebable TFTP and xinetd service
       service:
