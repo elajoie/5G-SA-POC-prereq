@@ -21,6 +21,7 @@ selinux_ports:
 
 mount_point: /tmp/iso
 efi_dir: "{{ mount_point }}/EFI/BOOT/"
+bios_dir: /usr/share/syslinux/
 boot_dir: "{{ mount_point }}/images/pxeboot/"
 services_pxe:
   - tftp
@@ -28,9 +29,13 @@ packages_pxe:
   - tftp-server
   - dhcp-server
   - xinetd
+  - syslinux
 efifiles:
   - BOOTX64.EFI
   - grubx64.efi
+biosfiles:
+  - pxelinux.0
+  - ldlinux.c32
 bootfiles:
   - initrd.img
   - vmlinuz
@@ -38,6 +43,8 @@ tftp_dir: /var/lib/tftpboot
 folders_pxe:
   - "{{ tftp_dir }}/uefi"
   - "{{ tftp_dir }}/images/{{ rhel_version }}"
+  - "{{ tftp_dir }}/pxelinux"
+  - "{{ tftp_dir }}/pxelinux/pxelinux.cfg"
   - /var/www/html/kickstarts
   - "/var/www/html/{{ rhel_version }}"
 systemd_services_pxe:

@@ -132,7 +132,7 @@ dhcp:
 ## PXE
 ocp_prereq_pxe: "true"
 pxe:
-  http_ip: "{{ httpipaddr }}"
+  http_ip: "{{ srv_ip }}"
   http_port: "{{ http.port }}"
 
 

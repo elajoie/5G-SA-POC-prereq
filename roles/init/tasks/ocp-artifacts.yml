@@ -56,12 +56,6 @@
         path: "{{ ocp_install_path }}/install"
         state: directory
 
-    #not needed if we pxe boo tthe bootstrap VM
-    - name: Template a .treeinfo for bootstrap install
-      template:
-        src: .treeinfo.j2
-        dest: /var/www/html/images/.treeinfo
-
 - name: Create ignition files
   when:
     - ocp_create_ignition == "true"

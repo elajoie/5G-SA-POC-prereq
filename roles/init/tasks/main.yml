@@ -17,8 +17,8 @@
 #- include_tasks: "ocp-nfs.yml"
 #  when: ocp_prereq_nfs == "true"
 
-#- include_tasks: "ocp-dhcp.yml"
-#  when: ocp_prereq_dhcp == "true"
+- include_tasks: "ocp-dhcp.yml"
+  when: ocp_prereq_dhcp == "true"
 
 - include_tasks: "ocp-pxe.yml"
   when: ocp_prereq_pxe == "true"
