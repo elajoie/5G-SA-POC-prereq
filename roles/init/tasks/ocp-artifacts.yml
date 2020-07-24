@@ -30,9 +30,9 @@
         src: "/var/www/html/images/{{ item.key }}"
         dest: "/var/www/html/images/{{ item.value }}"
       with_dict:
-        "rhcos-{{ ocp_release }}-x86_64-metal.x86_64.raw.gz": "metal.raw.gz"
-        "rhcos-{{ ocp_release }}-x86_64-installer-kernel-x86_64": "kernel"
-        "rhcos-{{ ocp_release }}-x86_64-installer-initramfs.x86_64.img": "initramfs"
+        "ocp_metal": "metal.raw.gz"
+        "ocp_kernel": "kernel"
+        "ocp_initramfs": "initramfs"
 
     - name: Download Openshift installer
       unarchive:

@@ -52,3 +52,6 @@ systemd_services_pxe:
   - xinetd.service
 boot_iso: rhel-8.2-x86_64-boot.iso
 rhel_version: RHEL-8.2
+ocp_metal: rhcos-{{ ocp_release }}-x86_64-metal.x86_64.raw.gz
+ocp_initramfs: rhcos-{{ ocp_release }}-x86_64-installer-initramfs.x86_64.img
+ocp_kernel: rhcos-{{ ocp_release }}-x86_64-installer-kernel-x86_64
