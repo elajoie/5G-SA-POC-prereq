@@ -72,7 +72,7 @@
     - name: Template a file for custom kickstart onto tftp server
       template:
         src: ks.cfg-mac.j2
-        dest: "/var/www/html/kickstarts/ks.cfg-01-{{ [item].macaddr | hwaddr('eui48') | lower }}"
+        dest: "/var/www/html/kickstarts/ks.cfg-01-{{ item.macaddr | hwaddr('eui48') | lower }}"
       with_items:
         - "{{ nodes.masters }}"
         - "{{ nodes.workers }}"
@@ -81,7 +81,7 @@
     - name: Template a file for custom grub menu onto tftp server
       template:
         src: grub.cfg-mac.j2
-        dest: "{{ tftp_dir }}/uefi/grub.cfg-01-{{ [item].macaddr | hwaddr('eui48') | lower }}"
+        dest: "{{ tftp_dir }}/uefi/grub.cfg-01-{{ item.macaddr | hwaddr('eui48') | lower }}"
       with_items:
         - "{{ nodes.masters }}"
         - "{{ nodes.workers }}"
