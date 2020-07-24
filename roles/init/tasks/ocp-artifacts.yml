@@ -29,11 +29,11 @@
         remote_src: True
         src: "/var/www/html/images/{{ item.key }}"
         dest: "/var/www/html/images/{{ item.value }}"
-      with_items:
-        "rhcos-{{ ocp_release }}-x86_64-metal.x86_64.raw.gz" : "metal.raw.gz"
-        "rhcos-{{ ocp_release }}-x86_64-installer-kernel-x86_64" : "kernel"
-        "rhcos-{{ ocp_release }}-x86_64-installer-initramfs.x86_64.img" : "initramfs"
-        
+      with_dict:
+        "rhcos-{{ ocp_release }}-x86_64-metal.x86_64.raw.gz": "metal.raw.gz"
+        "rhcos-{{ ocp_release }}-x86_64-installer-kernel-x86_64": "kernel"
+        "rhcos-{{ ocp_release }}-x86_64-installer-initramfs.x86_64.img": "initramfs"
+
     - name: Download Openshift installer
       unarchive:
         src: "{{ ocp_mirror }}/clients/ocp/{{ ocp_release }}/openshift-install-linux-{{ ocp_release }}.tar.gz"
