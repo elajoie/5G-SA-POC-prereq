@@ -56,7 +56,7 @@
     - name: Set up BIOS cfg boot files
       template:
         src: all-default.j2
-        dest: "{{ tftp_dir }}/pxelinux/pxelinux.cfg/{{ item.macaddr | hwaddr('eui48') | lower }}"
+        dest: "{{ tftp_dir }}/pxelinux/pxelinux.cfg/01-{{ item.macaddr | hwaddr('eui48') | lower }}"
         mode: 0555
       with_items:
         - "{{ nodes.masters }}"
@@ -101,7 +101,6 @@
         src: grub.cfg-mac.j2
         dest: "{{ tftp_dir }}/uefi/grub.cfg-01-{{ item.macaddr | hwaddr('eui48') | lower }}"
         mode: 0555
-        
       with_items:
         - "{{ nodes.masters }}"
         - "{{ nodes.workers }}"
