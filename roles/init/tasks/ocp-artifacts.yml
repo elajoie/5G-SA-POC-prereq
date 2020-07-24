@@ -17,22 +17,12 @@
 
     - name: Download VM image for install
       get_url:
-        url: "{{ item }}"
-        dest: /var/www/html/images/
-      with_items:
-        - "{{ ocp_mirror }}/dependencies/rhcos/4.{{ ocp_release.split('.')[1] | lower }}/latest/rhcos-{{ ocp_release }}-x86_64-metal.x86_64.raw.gz"
-        - "{{ ocp_mirror }}/dependencies/rhcos/4.{{ ocp_release.split('.')[1] | lower }}/latest/rhcos-{{ ocp_release }}-x86_64-installer-kernel-x86_64"
-        - "{{ ocp_mirror }}/dependencies/rhcos/4.{{ ocp_release.split('.')[1] | lower }}/latest/rhcos-{{ ocp_release }}-x86_64-installer-initramfs.x86_64.img"
-
-    - name: Rename files for grub and pxe
-      copy:
-        remote_src: True
-        src: "/var/www/html/images/{{ item.key }}"
-        dest: "/var/www/html/images/{{ item.value }}"
+        url: "{{ item.value }}"
+        dest: "/var/www/html/images/{{ item.key }}"
       with_dict:
-        "ocp_metal": "metal.raw.gz"
-        "ocp_kernel": "kernel"
-        "ocp_initramfs": "initramfs"
+        "metal.raw.gz": "{{ ocp_mirror }}/dependencies/rhcos/4.{{ ocp_release.split('.')[1] | lower }}/latest/rhcos-{{ ocp_release }}-x86_64-metal.x86_64.raw.gz"
+        "kernel": "{{ ocp_mirror }}/dependencies/rhcos/4.{{ ocp_release.split('.')[1] | lower }}/latest/rhcos-{{ ocp_release }}-x86_64-installer-kernel-x86_64"
+        "initramfs": "{{ ocp_mirror }}/dependencies/rhcos/4.{{ ocp_release.split('.')[1] | lower }}/latest/rhcos-{{ ocp_release }}-x86_64-installer-initramfs.x86_64.img"
 
     - name: Download Openshift installer
       unarchive:
