@@ -24,6 +24,17 @@
         "kernel": "{{ ocp_mirror }}/dependencies/rhcos/4.{{ ocp_release.split('.')[1] | lower }}/latest/rhcos-{{ ocp_release }}-x86_64-installer-kernel-x86_64"
         "initramfs": "{{ ocp_mirror }}/dependencies/rhcos/4.{{ ocp_release.split('.')[1] | lower }}/latest/rhcos-{{ ocp_release }}-x86_64-installer-initramfs.x86_64.img"
 
+    - name: Rename files for grub and pxe
+      copy:
+        remote_src: yes
+        src: "/var/www/html/images/{{ item }}"
+        dest: "/var/lib/tftpboot/images/{{ item }}"
+        mode: '755'
+      with_items:
+        - metal.raw.gz
+        - kernel
+        - initramfs
+
     - name: Download Openshift installer
       unarchive:
         src: "{{ ocp_mirror }}/clients/ocp/{{ ocp_release }}/openshift-install-linux-{{ ocp_release }}.tar.gz"
