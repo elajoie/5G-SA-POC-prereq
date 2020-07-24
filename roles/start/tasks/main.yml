@@ -15,7 +15,5 @@
     --os-type linux
     --os-variant rhel8.2
     --network network=ServicesTrunk,mac=52:54:60:11:11:11
+    --pxe
     --noautoconsole
-    --location http://{{ srv_ip }}:8080/images/
-    --extra-args 'nomodeset rd.neednet=1 coreos.inst=yes coreos.inst.install_dev=vda coreos.inst.image_url=http://{{ srv_ip }}:8080/images/rhcos-metal.raw.gz coreos.inst.ignition_url=http://{{ srv_ip }}:8080/ignition/bootstrap.ign'"
-

@@ -9,7 +9,7 @@
       file:
         path: "{{ item }}"
         state: directory
-        mode: u+rwx,g-rx,o-rx
+        mode: '755'
       with_items:
         - "{{ ocp_install_path }}/artifacts/openshift-installer-{{ ocp_release }}"
         - "{{ ocp_install_path }}/artifacts/openshift-client-{{ ocp_release }}"
