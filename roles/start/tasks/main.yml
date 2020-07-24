@@ -16,4 +16,4 @@
     --os-variant rhel8.2
     --network network=ServicesTrunk,mac=52:54:60:11:11:11
     --pxe
-    --noautoconsole
+    --noautoconsole"
