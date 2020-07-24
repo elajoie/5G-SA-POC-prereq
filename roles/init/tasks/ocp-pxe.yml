@@ -90,6 +90,7 @@
       template:
         src: ks.cfg-mac.j2
         dest: "/var/www/html/kickstarts/ks.cfg-01-{{ item.macaddr | hwaddr('eui48') | lower }}"
+        mode: 0555
       with_items:
         - "{{ nodes.masters }}"
         - "{{ nodes.workers }}"
@@ -99,6 +100,8 @@
       template:
         src: grub.cfg-mac.j2
         dest: "{{ tftp_dir }}/uefi/grub.cfg-01-{{ item.macaddr | hwaddr('eui48') | lower }}"
+        mode: 0555
+        
       with_items:
         - "{{ nodes.masters }}"
         - "{{ nodes.workers }}"

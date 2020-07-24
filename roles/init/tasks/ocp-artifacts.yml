@@ -69,6 +69,13 @@
       args:
         chdir: /var/www/html/ignition/
 
+    - name: Recursively change ownership of ignition files
+      file:
+        path: /var/www/html/ignition/
+        state: directory
+        recurse: yes
+        mode: 0555
+
 - name: Remove OCP binaries
   become: true
   tags: remove
