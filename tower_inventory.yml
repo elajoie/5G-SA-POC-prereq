@@ -141,7 +141,7 @@ pxe:
 ocp_prereq_artifacts: "true"
 ocp_install_path: "/root/ocp"
 ocp_mirror: "https://mirror.openshift.com/pub/openshift-v4"
-ocp_install_config_path: /var/www/html/ignition/install-config.yaml"
+ocp_install_config_path: /var/www/html/ignition/install-config.yaml
 
 ocp_release: "4.5.2"
 ocp_create_ignition: "true"
