@@ -3,6 +3,6 @@ DEFAULT pxeboot
 TIMEOUT 20
 PROMPT 0
 LABEL pxeboot
-    KERNEL http://{{pxe.http_ip}}:{{pxe.http_port}}/images/kernel
+    KERNEL images/kernel
     APPEND ip=dhcp rd.neednet=1 initrd=http://{{pxe.http_ip}}:{{pxe.http_port}}/images/initramfs console=tty0 console=ttyS0 coreos.inst=yes coreos.inst.install_dev={{ item.disk }} coreos.inst.image_url=http://{{pxe.http_ip}}:{{pxe.http_port}}/images/metal.raw.gz coreos.inst.ignition_url=http://{{pxe.http_ip}}:{{pxe.http_port}}/ignition/{{ item.name | regex_replace('[0-9]') }}.ign
 FFFFFFFFFFFFF
