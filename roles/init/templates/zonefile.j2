@@ -1,48 +1,27 @@
 $TTL 1W
 @	IN	SOA	ns1.{{ baseName }}.{{ baseDomain }}.	root (
-			{{ serialnumber }}	; serial
+			{{ ansible_date_time.epoch }}	; serial
 			3H		; refresh (3 hours)
 			30M		; retry (30 minutes)
 			2W		; expiry (2 weeks)
 			1W )		; minimum (1 week)
-	IN	NS	ns1.{{ baseName }}.{{ baseDomain }}.
-	IN	MX 10	smtp.{{ baseName }}.{{ baseDomain }}.
 ;
 ;
-ns1	IN	A	{{ srv_ip }}
-smtp	IN	A	{{ srv_ip }}
-;
-{{ dnshostname }}.	IN	A	{{ srv_ip }}
-{{ dnshostname.split('.')[0] }}	IN	A	{{ srv_ip }}
-;
-; The api points to the IP of your load balancer
-api		IN	A	{{ ocp.api_ip}}
-api-int		IN	A	{{ ocp.api_int_ip  }}
-;
-; The wildcard also points to the load balancer
-*.apps		IN	A	{{ ocp.apps_ip }}
-;
-; Create entry for the bootstrap host
-{{ nodes.bootstrap.name }}	IN	A	{{ nodes.bootstrap.ipaddr }}
-;
-; Create entries for the master hosts
+{{ ansible_hostname }} IN A {{ srv_ip }}
+api IN A {{ ocp.api_ip}}
+api-int IN A {{ ocp.api_int_ip  }}
+*.apps IN A {{ ocp.apps_ip }}
+{{ nodes.bootstrap.name }} IN A {{ nodes.bootstrap.ipaddr }}
 {% for m in nodes.masters %}
-{{ m.name }}		IN	A	{{ m.ipaddr }}
+{{ m.name }} IN A {{ m.ipaddr }}
 {% endfor %}
-;
-; Create entries for the worker hosts
 {% for w in nodes.workers %}
-{{ w.name }}		IN	A	{{ w.ipaddr }}
+{{ w.name }} IN A {{ w.ipaddr }}
 {% endfor %}
-;
-; The ETCd cluster lives on the masters...so point these to the IP of the masters
 {% for m in nodes.masters %}
-etcd-{{ loop.index0 }}	IN	A	{{ m.ipaddr }}
+etcd-{{ loop.index0 }} IN A {{ m.ipaddr }}
 {% endfor %}
-;
-; The SRV records are IMPORTANT....make sure you get these right...note the trailing dot at the end...
 {% for m in nodes.masters %}
-_etcd-server-ssl._tcp	IN	SRV	0 10 2380 etcd-{{ loop.index0 }}.{{ baseName }}.{{ baseDomain }}.
+_etcd-server-ssl._tcp 3600 IN SRV 0 10 2380 etcd-{{ loop.index0 }}.{{ baseName }}.{{ baseDomain }}.
 {% endfor %}
-;
-;EOF
+

@@ -15,43 +15,10 @@
           - firewalld
         state: present
 
-    - name: Get Hostname
-      shell: "hostname"
-      register: dnshostname
-
-    - name: Setting hostname as a fact
-      set_fact:
-        dnshostname: "{{ dnshostname.stdout }}"
-
     - name: Write out named file
       template:
         src: named.conf.j2
         dest: /etc/named.conf
-
-    - copy:
-        dest: "/usr/local/bin/set-dns-serial.sh"
-        mode: '0555'
-        content: |
-          #!/bin/bash
-          dnsserialfile=/usr/local/src/dnsserialXXXX.txt
-          zonefile=/var/named/zonefile.db
-          if [ -f zonefile ] ; then
-            echo $[ $(grep serial ${zonefile}  | tr -d "\t"" ""\n"  | cut -d';' -f 1) + 1 ] | tee ${dnsserialfile}
-          else
-            if [ ! -f ${dnsserialfile} ] || [ ! -s ${dnsserialfile} ]; then
-              echo $(date +%Y%m%d00) | tee ${dnsserialfile}
-            else
-              echo $[ $(< ${dnsserialfile}) + 1 ] | tee ${dnsserialfile}
-            fi
-          fi
-
-    - name: Set zone serial number
-      shell: "/usr/local/bin/set-dns-serial.sh"
-      register: dymanicserialnumber
-
-    - name: Setting serial number as a fact
-      set_fact:
-        serialnumber: "{{ dymanicserialnumber.stdout }}"
 
     - name: Write out "{{ dns.domain }}" zone file
       template:
