@@ -7,7 +7,7 @@
 
 - name: Setup OCP bootstrap VM
   command: "virt-install
-    --name {{ nodes.bootstrap.name }}
+    --name bootstrap
     --disk size=50
     --ram 16000
     --cpu host
