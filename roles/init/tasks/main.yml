@@ -2,11 +2,11 @@
 # tasks file for ocp-prereq-role
 - include_vars: "vault"
 
-- include_tasks: "ocp-lb.yml"
-  when: ocp_prereq_lb == "true"
-
 - include_tasks: "ocp-dns.yml"
   when: ocp_prereq_dns == "true"
+
+- include_tasks: "ocp-lb.yml"
+  when: ocp_prereq_lb == "true"
 
 - include_tasks: "ocp-http.yml"
   when: ocp_prereq_http == "true"
