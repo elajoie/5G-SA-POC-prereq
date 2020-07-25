@@ -11,7 +11,9 @@ $TTL 1W
 api IN A {{ ocp.api_ip}}
 api-int IN A {{ ocp.api_int_ip  }}
 *.apps IN A {{ ocp.apps_ip }}
-{{ nodes.bootstrap.name }} IN A {{ nodes.bootstrap.ipaddr }}
+{% for b in nodes.bootstrap %}
+{{ b.name }} IN A {{ b.ipaddr }}
+{% endfor %}
 {% for m in nodes.masters %}
 {{ m.name }} IN A {{ m.ipaddr }}
 {% endfor %}

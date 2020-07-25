@@ -15,14 +15,14 @@ ocp:
 
 nodes:
   bootstrap:
-    name: "bootstrap"
-    ipaddr: "{{ nodes_subnet24 | default ('192.168.126')}}.10"
-    netmask: "255.255.255.0"
-    gw: "{{ nodes_subnet24 | default ('192.168.126')}}.254"
-    macaddr: "52:54:60:11:11:11"
-    disk: "vda"
-    boot: "bios"
-    nic_pxe: enp1s0
+    - name: "bootstrap"
+      ipaddr: "{{ nodes_subnet24 | default ('192.168.126')}}.10"
+      netmask: "255.255.255.0"
+      gw: "{{ nodes_subnet24 | default ('192.168.126')}}.254"
+      macaddr: "52:54:60:11:11:11"
+      disk: "vda"
+      boot: "bios"
+      nic_pxe: enp1s0
   masters:
     - name: "master1"
       ipaddr: "{{ nodes_subnet24 | default ('192.168.126')}}.11"
