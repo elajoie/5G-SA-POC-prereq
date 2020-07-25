@@ -29,11 +29,13 @@ subnet {{  dhcp.ipid }} netmask {{  dhcp.netmaskid }} {
     }
 }
 
-host {{ nodes.bootstrap.name }} {
-	option host-name "{{ nodes.bootstrap.name }}.{{ baseName }}.{{ baseDomain }}";
-	hardware ethernet {{ nodes.bootstrap.macaddr }}; 
-	fixed-address {{ nodes.bootstrap.ipaddr }};
+{% for b in nodes.bootstrap %}
+host {{ b.name }} {
+	option host-name "{{ b.name }}.{{ baseName }}.{{ baseDomain }}";
+	hardware ethernet {{ b.macaddr }}; 
+	fixed-address {{ b.ipaddr }};
 }
+{% endfor %}
 
 {% for m in nodes.masters %}
 host {{ m.name }} {
