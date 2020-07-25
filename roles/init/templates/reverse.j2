@@ -6,19 +6,14 @@ $TTL 1W
 			2W		; expiry (2 weeks)
 			1W )		; minimum (1 week)
 	IN	NS	ns1.{{ baseName }}.{{ baseDomain }}.
-;
-; syntax is "last octet" and the host must have fqdn with trailing dot
 {% for m in nodes.masters %}
 {{ m.ipaddr.split('.')[3] }}	IN	PTR	{{ m.name }}.{{ baseName }}.{{ baseDomain }}.
 {% endfor %}
-;
-{{ nodes.bootstrap.ipaddr.split('.')[3] }}	IN	PTR	{{ nodes.bootstrap.name }}.{{ baseName }}.{{ baseDomain }}.
-;
+{% for b in nodes.bootstrap %}
+{{ b.ipaddr.split('.')[3] }}	IN	PTR	{{ b.name }}.{{ baseName }}.{{ baseDomain }}.
+{% endfor %}
 {{ srv_ip.split('.')[3] }}	IN	PTR	api.{{ baseName }}.{{ baseDomain }}.
 {{ srv_ip.split('.')[3] }}	IN	PTR	api-int.{{ baseName }}.{{ baseDomain }}.
-;
 {% for w in nodes.workers %}
 {{ w.ipaddr.split('.')[3] }}	IN	PTR	{{ w.name }}.{{ baseName }}.{{ baseDomain }}.
 {% endfor %}
-;
-;EOF
