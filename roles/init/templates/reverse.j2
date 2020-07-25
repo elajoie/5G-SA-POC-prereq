@@ -1,11 +1,11 @@
 $TTL 1W
-@	IN	SOA	ns1.{{ baseName }}.{{ baseDomain }}.	root (
+@	IN	SOA	{{  }}.{{ baseName }}.{{ baseDomain }}.	root (
 			{{ ansible_date_time.epoch }}	; serial
 			3H		; refresh (3 hours)
 			30M		; retry (30 minutes)
 			2W		; expiry (2 weeks)
 			1W )		; minimum (1 week)
-	IN	NS	ns1.{{ baseName }}.{{ baseDomain }}.
+	IN	NS	{{ ansible_hostname }}.{{ baseName }}.{{ baseDomain }}.
 {% for m in nodes.masters %}
 {{ m.ipaddr.split('.')[3] }}	IN	PTR	{{ m.name }}.{{ baseName }}.{{ baseDomain }}.
 {% endfor %}
