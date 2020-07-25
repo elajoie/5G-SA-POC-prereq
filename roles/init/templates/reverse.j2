@@ -1,6 +1,6 @@
 $TTL 1W
 @	IN	SOA	ns1.{{ baseName }}.{{ baseDomain }}.	root (
-			{{ serialnumber }}	; serial
+			{{ ansible_date_time.epoch }}	; serial
 			3H		; refresh (3 hours)
 			30M		; retry (30 minutes)
 			2W		; expiry (2 weeks)

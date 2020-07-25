@@ -20,7 +20,7 @@
         src: named.conf.j2
         dest: /etc/named.conf
 
-    - name: Write out "{{ dns.domain }}" zone file
+    - name: Write out "{{ baseName }}.{{ baseDomain }}" zone file
       template:
         src: zonefile.j2
         dest: /var/named/zonefile.db
