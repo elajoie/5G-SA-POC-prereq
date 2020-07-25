@@ -11,9 +11,9 @@
     --disk size=50
     --ram 16000
     --cpu host
-    --vcpus 8
+    --vcpus 16
     --os-type linux
     --os-variant rhel8.2
-    --network network=ServicesTrunk,mac=52:54:60:11:11:11
+    --network network=ServicesTrunk,mac=52:54:00:39:2c:c5
     --pxe
     --noautoconsole"

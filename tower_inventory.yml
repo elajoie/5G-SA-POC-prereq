@@ -19,7 +19,7 @@ nodes:
       ipaddr: "{{ nodes_subnet24 | default ('192.168.126')}}.10"
       netmask: "255.255.255.0"
       gw: "{{ nodes_subnet24 | default ('192.168.126')}}.254"
-      macaddr: "52:54:60:11:11:11"
+      macaddr: "52:54:00:39:2c:c5"
       disk: "vda"
       boot: "bios"
       nic_pxe: enp1s0
