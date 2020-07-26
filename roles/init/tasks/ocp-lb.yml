@@ -7,13 +7,12 @@
 
     - name: Install needed packages
       dnf:
-        name: "{{ items }}"
+        name:
+          - haproxy
+          - policycoreutils-python-utils
+          - setools-console
         state: latest
-      with_items:
-        - haproxy
-        - policycoreutils-python-utils
-        - setools-console
-
+        
     - name: setup firewall ports
       firewalld:
         port: "{{ item }}"

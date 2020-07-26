@@ -5,11 +5,11 @@
   tags: install
   block:
     - name: Install needed packages
-      yum:
+      dnf:
         name:
           - bind
           - bind-utils
-        state: present
+        state: latest
 
     - name: Configure Firewalld
       ignore_errors: yes
