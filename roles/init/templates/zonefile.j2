@@ -8,9 +8,9 @@ $TTL 1W
 @	IN	NS	{{ ansible_hostname }}.{{ baseName }}.{{ baseDomain }}.
 ;
 {{ ansible_hostname }} IN A {{ srv_ip }}
-api IN A {{ ocp.api_ip}}
-api-int IN A {{ ocp.api_int_ip  }}
-*.apps IN A {{ ocp.apps_ip }}
+api IN A {{ srv_ip }}
+api-int IN A {{ srv_ip  }}
+*.apps IN A {{ srv_ip }}
 {% for b in nodes.bootstrap %}
 {{ b.name }} IN A {{ b.ipaddr }}
 {% endfor %}
