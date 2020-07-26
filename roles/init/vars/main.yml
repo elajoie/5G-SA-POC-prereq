@@ -103,6 +103,7 @@ ocp_folders:
   - "{{ ign_folder }}"
   - "{{ ocp_install_path }}"
   - "{{ folders_pxe }}"
+  - /root/bin
 
 ocp_release: "4.5.2"
 
