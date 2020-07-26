@@ -40,14 +40,14 @@
     - name: Copy over files for UEFI
       copy:
         remote_src: yes
-        src: "{{ efi_dir }}{{ item }}"
+        src: "{{ efi_dir }}/{{ item }}"
         dest: "{{ tftp_dir }}/uefi/{{ item }}"
       with_items: "{{ efifiles }}"
 
     - name: Copy over files for bios
       copy:
         remote_src: yes
-        src: "{{ bios_dir }}{{ item }}"
+        src: "{{ bios_dir }}/{{ item }}"
         dest: "{{ tftp_dir }}/pxelinux/{{ item }}"
       with_items: "{{ biosfiles }}"
 
@@ -64,7 +64,7 @@
     - name: Copy over files for booting RHEL
       copy:
         remote_src: yes
-        src: "{{ boot_dir }}{{ item }}"
+        src: "{{ boot_dir }}/{{ item }}"
         dest: "{{ tftp_dir }}/images/{{ rhel_version}}/{{ item }}"
       with_items: "{{ bootfiles }}"
 
