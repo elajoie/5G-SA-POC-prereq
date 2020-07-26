@@ -1,10 +1,10 @@
 set timeout=60
 menuentry 'OpenShift {{ ocp_release }} RHCOS' {
-  linuxefi images/kernel ip=dhcp rd.neednet=1 initrd=http://{{ srv_ip }}:8080/images/initramfs console=tty0 console=ttyS0 coreos.inst=yes coreos.inst.install_dev={{ item.disk }} coreos.inst.image_url=http://{{ srv_ip }}:8080/images/metal.raw.gz coreos.inst.ignition_url=http://{{ srv_ip }}:8080/ignition/{{ item.name | regex_replace('[0-9]') }}.ign  
+  linuxefi images/kernel ip=dhcp rd.neednet=1 initrd=http://{{ srv_ip }}/images/initramfs console=tty0 console=ttyS0 coreos.inst=yes coreos.inst.install_dev={{ item.disk }} coreos.inst.image_url=http://{{ srv_ip }}/images/metal.raw.gz coreos.inst.ignition_url=http://{{ srv_ip }}/ignition/{{ item.name | regex_replace('[0-9]') }}.ign  
   initrdefi images/initramfs
 }
 
 menuentry '{{ rhel_version }} with CDN' {
-  linuxefi images/{{ rhel_version }}/vmlinuz ip=dhcp inst.stage2=http://{{ srv_ip }}:8080/{{ rhel_version }}  inst.ks=http://{{ srv_ip }}:8080/kickstarts/ks.cfg-01-{{ item.macaddr | hwaddr('eui48') | lower }}
+  linuxefi images/{{ rhel_version }}/vmlinuz ip=dhcp inst.stage2=http://{{ srv_ip }}/{{ rhel_version }}  inst.ks=http://{{ srv_ip }}/kickstarts/ks.cfg-01-{{ item.macaddr | hwaddr('eui48') | lower }}
   initrdefi images/{{ rhel_version }}/initrd.img
 }

@@ -1,5 +1,5 @@
 set timeout=60
 menuentry '{{ rhel_version }} with CDN' {
-  linuxefi images/{{ rhel_version }}/vmlinuz ip=dhcp inst.stage2=http://{{ srv_ip }}:8080/{{ rhel_version }}  inst.ks=http://{{ srv_ip }}:8080/kickstarts/ks.cfg
+  linuxefi images/{{ rhel_version }}/vmlinuz ip=dhcp inst.stage2=http://{{ srv_ip }}/{{ rhel_version }}  inst.ks=http://{{ srv_ip }}/kickstarts/ks.cfg
   initrdefi images/{{ rhel_version }}/initrd.img
 }

@@ -7,8 +7,12 @@
 
     - name: Install needed packages
       dnf:
-        name: "{{ packages_lb }}"
+        name: "{{ items }}"
         state: latest
+      with_items:
+        - haproxy
+        - policycoreutils-python-utils
+        - setools-console
 
     - name: setup firewall ports
       firewalld:
@@ -17,7 +21,12 @@
         state: enabled
         immediate: yes
         zone: public
-      with_items: "{{ ports_lb }}"
+      with_items:
+        - 80/tcp
+        - 443/tcp
+        - 6443/tcp
+        - 22623/tcp
+        - 9000/tcp
 
     - name: Write out haproxy config file
       template:
@@ -37,24 +46,3 @@
         state: restarted
       with_items:
         - haproxy
-
-
-- name: Remove Load Balancer
-  become: true
-  tags: remove
-  block:
-
-    - name: Configure Firewalld
-      ignore_errors: yes
-      firewalld:
-        zone: public
-        state: disabled
-        permanent: yes
-        port: "{{ item }}"
-        immediate: yes
-      with_items: "{{ ports_lb }}"
-
-    - name: Remove packages
-      dnf:
-        name: "{{ packages_lb }}"
-        state: removed

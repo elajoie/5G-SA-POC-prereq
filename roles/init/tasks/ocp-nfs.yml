@@ -12,8 +12,6 @@
       with_items:
         - nfs-utils
         - rpcbind
-        - firewalld
-
 
     - name: Create mountable dirs
       file:
@@ -28,8 +26,6 @@
         - /export/ocp/static
         - /export/ocp/static/registry
         - /export/ocp/dynamic
-
-
 
     - name: FIX permissions
       shell: |
@@ -74,47 +70,3 @@
       ignore_errors: yes
       shell: |
         firewall-cmd --reload
-
-- name: Remove NFS
-  become: true
-  tags: remove
-  block:
-
-    - name: Get Firewalld ZONE
-      shell: "IFACE=$(nmcli con show '{{ srv_interface }}' | grep connection.interface-name | awk '{print $2}') ; ZONE=$(firewall-cmd --list-all-zones | grep -B 3 $IFACE | head -n 1 | awk '{print $1}') ; echo $ZONE"
-      register: firewalldzone
-
-    - name: Configure Firewalld
-      ignore_errors: yes
-      firewalld:
-        zone: "{{ firewalldzone.stdout }}"
-        state: disabled
-        permanent: yes
-        port: "{{ item }}"
-      with_items:
-        - 111/udp
-        - 111/tcp
-        - 2049/udp
-        - 2049/tcp
-
-    - name: Reload Firewalld
-      ignore_errors: yes
-      shell: |
-        firewall-cmd --reload
-
-    - name: Remove packages
-      yum:
-        state: removed
-        name: "{{ item }}"
-      with_items:
-        - nfs-utils
-        - rpcbind
-
-
-    - name: Remove NFS OCP dirs
-      ignore_errors: yes
-      file:
-        path: "{{ item }}"
-        state: absent
-      with_items:
-        - /export/ocp/

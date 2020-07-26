@@ -5,7 +5,7 @@ $TTL 1W
 			30M		; retry (30 minutes)
 			2W		; expiry (2 weeks)
 			1W )	; minimum (1 week)
-	IN	NS	{{ ansible_hostname }}.{{ baseName }}.{{ baseDomain }}.
+@	IN	NS	{{ ansible_hostname }}.{{ baseName }}.{{ baseDomain }}.
 ;
 {{ ansible_hostname }} IN A {{ srv_ip }}
 api IN A {{ ocp.api_ip}}
