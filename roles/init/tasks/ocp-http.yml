@@ -18,7 +18,7 @@
         permanent: yes
         port: "{{ item }}"
       with_items:
-        - '8080'
+        - 8080/tcp
 
     - name: SELinux role to allow HAProxy to access ports 8080
       include_role:
