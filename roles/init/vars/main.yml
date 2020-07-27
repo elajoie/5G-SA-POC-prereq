@@ -114,6 +114,7 @@ selinux_ports:
   - { ports: '6443', proto: 'tcp', setype: 'http_port_t', state: 'present' }
   - { ports: '22623', proto: 'tcp', setype: 'http_port_t', state: 'present' }
   - { ports: '9000', proto: 'tcp', setype: 'http_port_t', state: 'present' }
+  - { ports: '8080', proto: 'tcp', setype: 'http_port_t', state: 'present' }
   
 #check results via semanage port -l | grep -E 'http_cache_port_t|commplex_main_port_t|http_port_t'
 

@@ -61,39 +61,6 @@
         - "{{ nodes.workers }}"
         - "{{ nodes.bootstrap }}"
 
-    - name: Copy over files for booting RHEL
-      copy:
-        remote_src: yes
-        src: "{{ boot_dir }}/{{ item }}"
-        dest: "{{ tftp_dir }}/images/{{ rhel_version}}/{{ item }}"
-      with_items: "{{ bootfiles }}"
-
-    - name: Copy over files for boot & stage2
-      copy:
-        remote_src: yes
-        src: "{{ mount_point }}/images"
-        dest: "/var/www/html/{{ rhel_version }}/"
-
-    - name: Template a file for kickstart onto tftp server
-      template:
-        src: ks.cfg.j2
-        dest: /var/www/html/kickstarts/ks.cfg
-
-    - name: Template a file for grub menu onto tftp server
-      template:
-        src: grub.cfg.j2
-        dest: "{{ tftp_dir }}/uefi/grub.cfg"
-
-    - name: Template a file for custom kickstart onto tftp server
-      template:
-        src: ks.cfg-mac.j2
-        dest: "/var/www/html/kickstarts/ks.cfg-01-{{ item.macaddr | hwaddr('eui48') | lower }}"
-        mode: '755'
-      with_items:
-        - "{{ nodes.masters }}"
-        - "{{ nodes.workers }}"
-        - "{{ nodes.bootstrap }}"
-
     - name: Template a file for custom grub menu onto tftp server
       template:
         src: grub.cfg-mac.j2

@@ -16,10 +16,13 @@
         zone: public
         state: enabled
         permanent: yes
-        service: "{{ item }}"
+        port: "{{ item }}"
       with_items:
-        - http
-        - https
+        - '8080'
+
+    - name: SELinux role to allow HAProxy to access ports 8080
+      include_role:
+        name: rhel-system-roles.selinux
 
     - name: Starting services
       service:
