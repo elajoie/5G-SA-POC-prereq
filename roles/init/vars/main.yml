@@ -105,7 +105,7 @@ ocp_folders:
   - "{{ folders_pxe }}"
   - /root/bin
 
-ocp_release: "4.4.11"
+ocp_release: "4.4.13"
 
 #https://unix.stackexchange.com/questions/363878/which-selinux-policies-apply-to-haproxy
 selinux_policy: targeted
