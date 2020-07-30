@@ -20,18 +20,18 @@ nodes:
       ipaddr: "{{ nodes_subnet24 | default ('192.168.126')}}.11"
       netmask: "255.255.255.0"
       gw: "{{ nodes_subnet24 | default ('192.168.126')}}.254"
-      macaddr: "0c:c4:7a:20:60:c9"
+      macaddr: "0c:c4:7a:20:60:c8"
       disk: "sda"
       boot: "bios"
-      nic_pxe: ens1f1
+      nic_pxe: ens1f0
     - name: "master2"
       ipaddr: "{{ nodes_subnet24 | default ('192.168.126')}}.12"
       netmask: "255.255.255.0"
       gw: "{{ nodes_subnet24 | default ('192.168.126')}}.254"
-      macaddr: "0c:c4:7a:20:61:c9"
+      macaddr: "0c:c4:7a:20:61:c8"
       disk: "sda"
       boot: "bios"
-      nic_pxe: ens1f1
+      nic_pxe: ens1f0
     - name: "master3"
       ipaddr: "{{ nodes_subnet24 | default ('192.168.126')}}.13"
       netmask: "255.255.255.0"
@@ -61,10 +61,10 @@ nodes:
       ipaddr: "{{ nodes_subnet24 | default ('192.168.126')}}.23"
       netmask: "255.255.255.0"
       gw: "{{ nodes_subnet24 | default ('192.168.126')}}.254"
-      macaddr: "3c:fd:fe:ab:b0:39"
+      macaddr: "3c:fd:fe:ab:b0:38"
       disk: "nvme0n1"
       boot: "uefi"
-      nic_pxe: ens786f1
+      nic_pxe: ens786f0
     - name: "worker4"
       ipaddr: "{{ nodes_subnet24 | default ('192.168.126')}}.24"
       netmask: "255.255.255.0"
