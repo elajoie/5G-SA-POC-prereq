@@ -14,9 +14,10 @@
 - name: Set servers to boot from network on net boot
   ipmi_boot:
     name: "{{ item }}"
-    login: "{{ vault_ipmiuser }}"
+    user: "{{ vault_ipmiuser }}"
     password: "{{ vault_ipmipass }}"
     bootdev: network
+    uefiboot: yes
   with_items:
     - 192.168.16.129
     - 192.168.16.130
@@ -28,7 +29,7 @@
 - name: Set servers to power on
   ipmi_power:
     name: "{{ item }}"
-    login: "{{ vault_ipmiuser }}"
+    user: "{{ vault_ipmiuser }}"
     password: "{{ vault_ipmipass }}"
     state: boot
   with_items:
