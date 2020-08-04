@@ -1,6 +1,5 @@
 ---
-- hosts: all
-  tasks:
+- tasks:
   - name: Powering on or rebooting the server for PXE
     hpilo_boot:
       host: "{{ item }}"
