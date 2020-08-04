@@ -6,6 +6,7 @@
     login: "{{ vault_ipmiuser }}"
     password: "{{ vault_ipmipass }}"
     force: yes
+    media: network
   delegate_to: localhost
   with_items:
     - 192.168.16.138
