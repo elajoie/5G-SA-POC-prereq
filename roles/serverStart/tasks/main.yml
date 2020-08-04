@@ -1,6 +1,5 @@
 ---
-- hosts: localhost
-
+- hosts: all
   tasks:
   - name: Powering on or rebooting the server for PXE
     hpilo_boot:
