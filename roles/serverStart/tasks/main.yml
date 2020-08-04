@@ -11,21 +11,6 @@
     - 192.168.16.138
     - 192.168.16.133
 
-- name: Set servers to power off
-  ipmi_power:
-    name: "{{ item }}"
-    login: "{{ vault_ipmiuser }}"
-    password: "{{ vault_ipmipass }}"
-    state: off
-  with_items:
-    - 192.168.16.129
-    - 192.168.16.130
-    - 192.168.16.131
-    - 192.168.16.132
-    - 192.168.16.136
-    - 192.168.16.137
-
-
 - name: Set servers to boot from network on net boot
   ipmi_boot:
     name: "{{ item }}"
