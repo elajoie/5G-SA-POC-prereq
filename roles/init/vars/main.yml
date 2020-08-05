@@ -63,6 +63,7 @@ nodes:
       gw: "{{ nodes_subnet24 | default ('192.168.126')}}.254"
       macaddr: "3c:fd:fe:ab:b0:38"
       disk: "nvme0n1"
+      ocs_disk: "nvme1n1"
       boot: "uefi"
       nic_pxe: ens786f0
     - name: "worker4"
@@ -71,6 +72,7 @@ nodes:
       gw: "{{ nodes_subnet24 | default ('192.168.126')}}.254"
       macaddr: "3c:fd:fe:ab:a6:81"
       disk: "nvme0n1"
+      ocs_disk: "nvme1n1"
       boot: "uefi"
       nic_pxe: ens786f1
     - name: "worker5"
@@ -79,6 +81,7 @@ nodes:
       gw: "{{ nodes_subnet24 | default ('192.168.126')}}.254"
       macaddr: "3c:fd:fe:ab:b3:71"
       disk: "nvme0n1"
+      ocs_disk: "nvme1n1"
       boot: "uefi"
       nic_pxe: ens786f1
 
