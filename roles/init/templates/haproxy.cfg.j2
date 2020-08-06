@@ -115,7 +115,7 @@ backend bastion_http
     server bastion 127.0.0.1:80
 
 frontend https
-    bind {{ ansible_hostname }}.{{ baseName }}.{{ baseDomain }}:443
+    bind *:443
     mode tcp
     option tcplog
     tcp-request inspect-delay 5s
