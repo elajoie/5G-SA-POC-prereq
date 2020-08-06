@@ -97,8 +97,9 @@ backend machineconfig
 {% endfor %}
 
 frontend http
-    bind {{ ansible_hostname }}.{{ baseName }}.{{ baseDomain }}:80
+    bind *:80
     mode tcp
+    option tcplog
     acl is_openshift_router hdr(host) -m dom .apps.{{ baseName }}.{{ baseDomain }}
     use_backend openshift_router_http if is_openshift_router
     default_backend bastion_http
